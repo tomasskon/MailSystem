@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailSystem.Client", "MailSy
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailSystem.Http", "MailSystem.Http\MailSystem.Http.csproj", "{F167E1B3-9D81-49CE-9D4E-738FA9F9C423}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailSystem.Dto", "MailSystem.Dto\MailSystem.Dto.csproj", "{8D72676D-7FF0-4B33-99C6-C701114E87C1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailSystem.Dto", "MailSystem.Dto\MailSystem.Dto.csproj", "{EACA4B27-D76B-4309-9FDF-42F42534BEC3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,9 +20,9 @@ Global
 		{F167E1B3-9D81-49CE-9D4E-738FA9F9C423}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F167E1B3-9D81-49CE-9D4E-738FA9F9C423}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F167E1B3-9D81-49CE-9D4E-738FA9F9C423}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8D72676D-7FF0-4B33-99C6-C701114E87C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8D72676D-7FF0-4B33-99C6-C701114E87C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8D72676D-7FF0-4B33-99C6-C701114E87C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8D72676D-7FF0-4B33-99C6-C701114E87C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EACA4B27-D76B-4309-9FDF-42F42534BEC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EACA4B27-D76B-4309-9FDF-42F42534BEC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EACA4B27-D76B-4309-9FDF-42F42534BEC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EACA4B27-D76B-4309-9FDF-42F42534BEC3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
