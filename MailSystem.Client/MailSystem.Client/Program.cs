@@ -1,6 +1,8 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using MailSystem.Http.HttpClients;
+using MailSystem.Http.Interfaces;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,10 +14,9 @@ namespace MailSystem.Client
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
-
-            builder.Services.AddScoped(
-                _ => new HttpClient {BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)});
-
+            builder.Services.AddHttpClient();
+            builder.Services.AddTransient<IUserHttpClient, UserHttpClient>();
+            
             await builder.Build().RunAsync();
         }
     }

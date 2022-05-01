@@ -1,7 +1,23 @@
 ﻿@page "/Home"
+@using MailSystem.Http.Interfaces
+@using MailSystem.Contracts.User
 
-<h3>Home</h3>
+@inject IUserHttpClient _userHttpClient;
+
+@if (_users is not null)
+{
+    foreach (var user in _users)
+    {
+        <h2>User name: @user.Name, surname: @user.Surname</h2>
+    }
+}
 
 @code {
-    
+    private List<UserContract> _users;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _users = (await _userHttpClient.GetUsers()).ToList();
+    }
+
 }

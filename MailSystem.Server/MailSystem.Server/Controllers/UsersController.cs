@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MailSystem.Server.Controllers
 {
-    [Route("[controller]")]
+    [Route("[controller]/[action]")]
     public class UsersController : ControllerBase
     {
         private readonly IMapper _mapper;

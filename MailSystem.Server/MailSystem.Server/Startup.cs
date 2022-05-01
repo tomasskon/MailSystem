@@ -32,6 +32,18 @@ namespace MailSystem.Server
             });
             services.AddSingleton(mapperConfig.CreateMapper());
             
+            services.AddCors(options =>
+            {
+                options.AddPolicy("SpecificPolicy",
+                    policy =>
+                    {
+                        policy
+                            .AllowAnyOrigin()
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
+            
             services.RegisterDatabaseFactory();
             services.RegisterServices();
             services.RegisterRepositories();
@@ -46,6 +58,8 @@ namespace MailSystem.Server
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MailSystem.Server v1"));
             }
 
+            app.UseCors("SpecificPolicy");
+            
             app.UseHttpsRedirection();
 
             app.UseRouting();
