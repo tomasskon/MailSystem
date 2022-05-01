@@ -1,3 +1,5 @@
+using AutoMapper;
+using MailSystem.Server.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +25,16 @@ namespace MailSystem.Server
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "MailSystem.Server", Version = "v1"});
             });
+            
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+            services.AddSingleton(mapperConfig.CreateMapper());
+            
+            services.RegisterDatabaseFactory();
+            services.RegisterServices();
+            services.RegisterRepositories();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
