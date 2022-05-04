@@ -6,7 +6,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\MailSystem.Contracts\MailSystem.Contracts.csproj" />
-      <ProjectReference Include="..\MailSystem.Dto\MailSystem.Dto.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -11,7 +11,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\MailSystem.Dto\MailSystem.Dto.csproj" />
       <ProjectReference Include="..\MailSystem.Http\MailSystem.Http.csproj" />
     </ItemGroup>
 
