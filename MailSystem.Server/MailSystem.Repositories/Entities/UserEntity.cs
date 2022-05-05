@@ -6,6 +6,8 @@ namespace MailSystem.Repositories.Entities
 {
     public class UserEntity : Entity
     {
+        public string Email { get; set; }
+        
         public virtual Guid Id { get; set; }
         
         public virtual string Name { get; set; }

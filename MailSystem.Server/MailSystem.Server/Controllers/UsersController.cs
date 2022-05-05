@@ -29,7 +29,7 @@ namespace MailSystem.Server.Controllers
             return Ok(_mapper.Map<List<UserContract>>(users));
         }
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult GetUser(Guid userId)
         {
             try
@@ -37,6 +37,27 @@ namespace MailSystem.Server.Controllers
                 var user = _userService.Get(userId);
 
                 return Ok(_mapper.Map<UserContract>(user));
+            }
+            catch (UserNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult CreateUser(CreateUserContract createUserContract)
+        {
+            try
+            {
+                var user = _mapper.Map<User>(createUserContract);
+
+                var userId = _userService.Create(user);
+
+                return Ok(userId);
+            }
+            catch (EmailAlreadyUsedException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (UserNotFoundException ex)
             {

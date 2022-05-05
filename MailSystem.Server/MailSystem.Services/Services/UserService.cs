@@ -23,6 +23,9 @@ namespace MailSystem.Services.Services
 
         public Guid Create(User user)
         {
+            if (_userRepository.CheckIfEmailAlreadyUsed(user.Email))
+                throw new EmailAlreadyUsedException($"Email occupied: {user.Email}");
+            
             return _userRepository.Create(user);
         }
 

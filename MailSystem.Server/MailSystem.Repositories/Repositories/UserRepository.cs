@@ -47,5 +47,12 @@ namespace MailSystem.Repositories.Repositories
 
             return _mapper.Map<User>(userEntity);
         }
+
+        public bool CheckIfEmailAlreadyUsed(string email)
+        {
+            using var session = _sessionFactory.OpenSession();
+
+            return session.Query<UserEntity>().Any(x => x.Email == email);
+        }
     }
 }
