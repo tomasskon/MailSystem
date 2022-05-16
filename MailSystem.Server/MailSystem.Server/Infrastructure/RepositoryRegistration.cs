@@ -9,6 +9,7 @@ namespace MailSystem.Server.Infrastructure
         public static void RegisterRepositories(this IServiceCollection services)
         {
             services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<ICourierRepository, CourierRepository>();
         }
     }
 }
