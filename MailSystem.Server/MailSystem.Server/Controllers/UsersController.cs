@@ -29,7 +29,7 @@ namespace MailSystem.Server.Controllers
             return Ok(_mapper.Map<List<UserContract>>(users));
         }
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult GetUser(Guid userId)
         {
             try
