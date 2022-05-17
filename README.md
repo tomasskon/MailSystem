@@ -32,7 +32,7 @@ The startup section will contain few sub sections which you must follow:
   4. Type: `docker compose up` once the command is finished you should see a container in your docker application containing `mailsystem-db-1` service
   5. You can close you command line but you'll notice that your container will be shut down, but you can start it back up from the docker application.
 ###### Starting server
-  1. Starting the server is very straight forward. Navigate to the `MailSystem.Service` directory either through IDE or by going there through windows explorer and clicking the .sln file. 
+  1. Starting the server is very straight forward. Navigate to the `MailSystem.Server` directory either through IDE or by going there through windows explorer and clicking the .sln file. 
   2. Once the project is open in the IDE run it either through debug or start mode. 
   3. A swagger website should open in port url: `localhost:5001`
 

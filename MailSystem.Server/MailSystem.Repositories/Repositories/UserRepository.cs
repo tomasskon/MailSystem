@@ -37,9 +37,9 @@ namespace MailSystem.Repositories.Repositories
             user.UpdatedAt = DateTime.UtcNow;
 
             var userEntity = _mapper.Map<UserEntity>(user);
-            session.Save(userEntity);
+            session.Save(userEntity); 
             transaction.Commit();
-
+            
             return userEntity.Id;
         }
 
