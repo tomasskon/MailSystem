@@ -58,11 +58,10 @@ namespace MailSystem.Repositories.Repositories
             using var transaction = session.BeginTransaction();
             
             var courierEntity = session.Get<CourierEntity>(courier.Id);
-            courierEntity.Username = courier.Username;
             courierEntity.FullName = courier.FullName;
             courierEntity.Phone = courier.Phone;
             courierEntity.Email = courier.Email;
-            //courierEntity.UpdatedAt = DateTime.UtcNow;
+            courierEntity.UpdatedAt = DateTime.UtcNow;
             
             session.Update(courierEntity);
             transaction.Commit();
@@ -76,10 +75,10 @@ namespace MailSystem.Repositories.Repositories
             var courierEntity = session.Get<CourierEntity>(courierId);
             courierEntity.Email = Guid.NewGuid().ToString();
             courierEntity.Phone = string.Empty;
-            courierEntity.Username = string.Empty;
             courierEntity.UpdatedAt = DateTime.UtcNow;
+            courierEntity.DeletedAt = DateTime.UtcNow;
             
-            session.Delete(courierEntity);
+            session.Update(courierEntity);
             transaction.Commit();
         }
         
