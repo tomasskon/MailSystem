@@ -10,9 +10,9 @@ namespace MailSystem.Server.Infrastructure
         public MappingProfile()
         {
             CreateMap<User, UserEntity>().ReverseMap();
-
             CreateMap<User, UserContract>().ReverseMap();
             CreateMap<User, CreateUserContract>().ReverseMap();
+            CreateMap<User, UpdateUserContract>().ReverseMap();
         }
     }
 }

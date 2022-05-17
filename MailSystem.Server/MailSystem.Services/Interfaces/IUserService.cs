@@ -11,5 +11,7 @@ namespace MailSystem.Services.Interfaces
         Guid Create(User user);
 
         User Get(Guid userId);
+        void Update(User user);
+        void Delete(Guid userId);
     }
 }
