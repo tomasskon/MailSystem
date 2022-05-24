@@ -1,7 +1,9 @@
 ﻿@page "/Home"
 @using MailSystem.Http.Interfaces
 @using MailSystem.Contracts.User
+@using MailSystem.Client.Interfaces
 
+@inject IAuthenticationService _authenticationService;
 @inject IUserHttpClient _userHttpClient;
 
 @if (_users is not null)

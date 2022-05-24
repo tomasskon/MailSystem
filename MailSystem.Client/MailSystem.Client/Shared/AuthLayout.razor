@@ -1,0 +1,17 @@
+﻿@using MailSystem.Client.Interfaces
+@inherits LayoutComponentBase
+
+@inject IAuthenticationService _authenticationService
+
+<div class="container">
+    <div class="row" style="margin-top: 10vw;">
+        @Body
+    </div>
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await _authenticationService.OnlyGuest();
+    }
+}

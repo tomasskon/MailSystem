@@ -1,6 +1,6 @@
-using System;
-using System.Net.Http;
 using System.Threading.Tasks;
+using MailSystem.Client.Interfaces;
+using MailSystem.Client.Services;
 using MailSystem.Http.HttpClients;
 using MailSystem.Http.Interfaces;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -16,7 +16,8 @@ namespace MailSystem.Client
             builder.RootComponents.Add<App>("#app");
             builder.Services.AddHttpClient();
             builder.Services.AddTransient<IUserHttpClient, UserHttpClient>();
-            
+            builder.Services.AddScoped<ILocalStorageService, LocalStorageService>();
+            builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
             await builder.Build().RunAsync();
         }
     }

@@ -1,4 +1,6 @@
-﻿@inherits LayoutComponentBase
+﻿@using MailSystem.Client.Interfaces
+@inherits LayoutComponentBase
+@inject IAuthenticationService _authenticationService
 
 <div class="page">
     <div class="sidebar">
@@ -7,7 +9,14 @@
 
     <div class="main">
         <div class="top-row px-4">
-            <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
+            <div class="dropdown ml-md-auto">
+              <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Name
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#" @onclick="Logout">Logout</a>
+              </div>
+            </div>
         </div>
 
         <div class="content px-4">
@@ -15,3 +24,15 @@
         </div>
     </div>
 </div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await _authenticationService.OnlyAuthenticated();
+    }
+
+    private async void Logout()
+    {
+        await _authenticationService.Logout();
+    }
+}
