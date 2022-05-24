@@ -5,10 +5,12 @@ using MailSystem.Contracts.Couriers;
 using MailSystem.Domain.Exceptions;
 using MailSystem.Domain.Models;
 using MailSystem.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MailSystem.Server.Controllers
 {
+    [Authorize]
     [Route("[controller]/[action]")]
     public class CourierController : ControllerBase
     {
@@ -28,7 +30,7 @@ namespace MailSystem.Server.Controllers
 
             return Ok(_mapper.Map<List<CourierContract>>(couriers));
         }
-
+        
         [HttpGet]
         public IActionResult GetCourier(Guid courierId)
         {

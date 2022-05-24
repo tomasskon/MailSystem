@@ -24,6 +24,30 @@ namespace MailSystem.Server
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "MailSystem.Server", Version = "v1"});
+                
+                c.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme()
+                {
+                    Description = "JWT Authorization header using the Bearer scheme",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT"
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "bearerAuth"
+                            }
+                        },
+                        System.Array.Empty<string>()
+                    }
+                });
             });
             
             var mapperConfig = new MapperConfiguration(mc =>
@@ -44,6 +68,8 @@ namespace MailSystem.Server
                     });
             });
             
+            services.RegisterConfigurations(Configuration);
+            services.RegisterAuthentication(Configuration);
             services.RegisterDatabaseFactory();
             services.RegisterServices();
             services.RegisterRepositories();
@@ -64,6 +90,7 @@ namespace MailSystem.Server
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });

@@ -1,15 +1,13 @@
-﻿using System;
-
-namespace MailSystem.Contracts.Couriers
+namespace MailSystem.Contracts.Authentication
 {
-    public class CourierContract
+    public class UserRegisterContract
     {
-        public Guid Id { get; set; }
-        
         public string FullName { get; set; }
 
         public string Phone { get; set; }
 
         public string Email { get; set; }
+        
+        public string Password { get; set; }
     }
 }

@@ -10,6 +10,8 @@ namespace MailSystem.Server.Infrastructure
         {
             services.AddSingleton<IUserRepository, UserRepository>();
             services.AddSingleton<ICourierRepository, CourierRepository>();
+            services.AddSingleton<IUserPasswordRepository, UserPasswordRepository>();
+            services.AddSingleton<ICourierPasswordRepository, CourierPasswordRepository>();
         }
     }
 }

@@ -23,6 +23,9 @@ namespace MailSystem.Services.Services
 
         public Guid Create(User user)
         {
+            if (_userRepository.CheckIfEmailAlreadyUsed(user.Email))
+                throw new UserEmailAlreadyUsedException($"User email already used: {user.Email}");
+
             return _userRepository.Create(user);
         }
 
@@ -32,6 +35,42 @@ namespace MailSystem.Services.Services
 
             if (user is null)
                 throw new UserNotFoundException($"User not found. User id: {userId}");
+
+            return user;
+        }
+
+        public void Update(User user)
+        {
+            var existingUser = _userRepository.Get(user.Id);
+
+            if (existingUser is null)
+                throw new UserNotFoundException($"User not found. User id: {user.Id}");
+
+            CheckEmailValidity(user, user.Email);
+
+            _userRepository.Update(user);
+        }
+
+        public void Delete(Guid userId)
+        {
+            if (!_userRepository.CheckIfExists(userId))
+                throw new UserNotFoundException($"User not found. User id: {userId}");
+
+            _userRepository.Delete(userId);
+        }
+
+        private void CheckEmailValidity(User user, string email)
+        {
+            if (user.Email != email && !_userRepository.CheckIfEmailAlreadyUsed(email))
+                throw new UserEmailAlreadyUsedException($"User email already used: {user.Email}");
+        }
+
+        public User GetByEmail(string email)
+        {
+            var user = _userRepository.GetByEmail(email);
+            
+            if(user is null)
+                throw new CourierNotFoundException($"User not found. User email: {email}");
 
             return user;
         }

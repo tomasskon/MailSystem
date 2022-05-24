@@ -34,9 +34,9 @@ namespace MailSystem.Repositories.Repositories
             using var transaction = session.BeginTransaction();
 
             var userEntity = _mapper.Map<UserEntity>(user);
-            session.Save(userEntity); 
+            session.Save(userEntity);
             transaction.Commit();
-            
+
             return userEntity.Id;
         }
 
@@ -45,6 +45,56 @@ namespace MailSystem.Repositories.Repositories
             using var session = _sessionFactory.OpenSession();
 
             var userEntity = session.Get<UserEntity>(userId);
+
+            return _mapper.Map<User>(userEntity);
+        }
+
+        public void Update(User user)
+        {
+            using var session = _sessionFactory.OpenSession();
+            using var transaction = session.BeginTransaction();
+
+            var userEntity = _mapper.Map<UserEntity>(user);
+            userEntity.FullName = user.FullName;
+            userEntity.Phone = user.Phone;
+            userEntity.Email = user.Email;
+
+            session.Update(userEntity);
+            transaction.Commit();
+        }
+
+        public void Delete(Guid userId)
+        {
+            using var session = _sessionFactory.OpenSession();
+            using var transaction = session.BeginTransaction();
+
+            var userEntity = session.Get<UserEntity>(userId);
+            userEntity.Email = Guid.NewGuid().ToString();
+            userEntity.Phone = string.Empty;
+
+            session.Delete(userEntity);
+            transaction.Commit();
+        }
+
+        public bool CheckIfEmailAlreadyUsed(string email)
+        {
+            using var session = _sessionFactory.OpenSession();
+
+            return session.Query<UserEntity>().Any(x => x.Email == email);
+        }
+
+        public bool CheckIfExists(Guid userId)
+        {
+            using var session = _sessionFactory.OpenSession();
+
+            return session.Query<UserEntity>().Any(x => x.Id == userId);
+        }
+        
+        public User GetByEmail(string email)
+        {
+            using var session = _sessionFactory.OpenSession();
+
+            var userEntity = session.Query<UserEntity>().SingleOrDefault(x => x.Email == email);
 
             return _mapper.Map<User>(userEntity);
         }

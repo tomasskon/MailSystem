@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace MailSystem.Contracts.Couriers
+namespace MailSystem.Contracts.Users
 {
-    public class CourierContract
+    public class UpdateUserContract
     {
         public Guid Id { get; set; }
-        
+
         public string FullName { get; set; }
 
         public string Phone { get; set; }

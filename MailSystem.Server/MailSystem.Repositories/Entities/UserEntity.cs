@@ -7,10 +7,15 @@ namespace MailSystem.Repositories.Entities
     public class UserEntity : Entity
     {
         public virtual Guid Id { get; set; }
-        
-        public virtual string Name { get; set; }
-        
-        public virtual string Surname { get; set; }
+
+        public virtual string FullName { get; set; }
+
+        public virtual string Phone { get; set; }
+
+        public virtual string Email { get; set; }
+
+        public virtual bool IsDisabled { get; set; }
+
     }
 
     public class UserEntityMap : ClassMap<UserEntity>
@@ -18,8 +23,10 @@ namespace MailSystem.Repositories.Entities
         public UserEntityMap()
         {
             Id(x => x.Id).GeneratedBy.Guid();
-            Map(x => x.Name).Length(60);
-            Map(x => x.Surname).Length(60);
+            Map(x => x.FullName).Length(50).Not.Nullable();
+            Map(x => x.Phone).Length(50).Not.Nullable();
+            Map(x => x.Email).Length(50).Not.Nullable();
+            Map(x => x.IsDisabled);
             Table("users");
         }
     }
