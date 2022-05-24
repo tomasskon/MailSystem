@@ -34,9 +34,9 @@ namespace MailSystem.Repositories.Repositories
             using var transaction = session.BeginTransaction();
 
             var userEntity = _mapper.Map<UserEntity>(user);
-            session.Save(userEntity);
+            session.Save(userEntity); 
             transaction.Commit();
-
+            
             return userEntity.Id;
         }
 
