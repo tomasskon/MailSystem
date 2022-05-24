@@ -43,5 +43,54 @@ namespace MailSystem.Server.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+        [HttpPost]
+        public IActionResult CreateUser([FromBody] CreateUserContract createUserContract)
+        {
+            try
+            {
+                var user = _mapper.Map<User>(createUserContract);
+                var userId = _userService.Create(user);
+
+                return Ok(userId);
+            }
+            catch(UserEmailAlreadyUsedException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        public IActionResult UpdateUser([FromBody] UpdateUserContract updateUserContract)
+        {
+            try
+            {
+                var user = _mapper.Map<User>(updateUserContract);
+                _userService.Update(user);
+
+                return Ok();
+
+            }
+            catch (UserNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteUser(Guid userId)
+        {
+            try
+            {
+                _userService.Delete(userId);
+
+                return Ok();
+
+            }
+            catch (UserNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }

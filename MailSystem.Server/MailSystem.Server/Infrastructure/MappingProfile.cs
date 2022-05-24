@@ -13,11 +13,12 @@ namespace MailSystem.Server.Infrastructure
             CreateMap<User, UserEntity>().ReverseMap();
             CreateMap<User, UserContract>().ReverseMap();
             CreateMap<User, CreateUserContract>().ReverseMap();
+            CreateMap<User, UpdateUserContract>().ReverseMap();
+            
             CreateMap<Courier, CourierEntity>().ReverseMap();
             CreateMap<Courier, CourierContract>().ReverseMap();
             CreateMap<Courier, CreateCourierContract>().ReverseMap();
             CreateMap<Courier, UpdateCourierContract>().ReverseMap();
-
         }
     }
 }
