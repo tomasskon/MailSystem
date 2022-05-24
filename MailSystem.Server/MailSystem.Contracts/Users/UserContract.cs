@@ -6,8 +6,6 @@ namespace MailSystem.Contracts.Users
     {
         public Guid Id { get; set; }
 
-        public string Username { get; set; }
-
         public string FullName { get; set; }
 
         public string Phone { get; set; }
@@ -15,11 +13,5 @@ namespace MailSystem.Contracts.Users
         public string Email { get; set; }
 
         public bool IsDisabled { get; set; }
-
-        public DateTime CreatedAt { get; set; }
-
-        public DateTime UpdatedAt { get; set; }
-
-        public DateTime DeletedAt { get; set; }
     }
 }
