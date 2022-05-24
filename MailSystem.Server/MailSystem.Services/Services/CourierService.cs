@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using MailSystem.Domain.Exceptions;
 using MailSystem.Domain.Models;
 using MailSystem.Repositories.Interfaces;
@@ -57,6 +58,16 @@ namespace MailSystem.Services.Services
                 throw new CourierNotFoundException($"Courier not found. Courier id: {courierId}");
             
             _courierRepository.Delete(courierId);
+        }
+
+        public Courier GetByEmail(string email)
+        {
+            var courier = _courierRepository.GetByEmail(email);
+            
+            if(courier is null)
+                throw new CourierNotFoundException($"Courier not found. Courier email: {email}");
+
+            return courier;
         }
 
         private void CheckEmailValidity(Courier courier, string email)

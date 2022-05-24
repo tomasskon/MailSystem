@@ -19,5 +19,7 @@ namespace MailSystem.Repositories.Interfaces
         bool CheckIfExists(Guid courierId);
 
         void Update(Courier courier);
+
+        Courier GetByEmail(string email);
     }
 }
