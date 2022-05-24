@@ -39,6 +39,7 @@ namespace MailSystem.Services.Services
 
             return user;
         }
+
         public void Update(User user)
         {
             var existingUser = _userRepository.Get(user.Id);

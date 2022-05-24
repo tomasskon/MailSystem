@@ -18,11 +18,7 @@ namespace MailSystem.Repositories.Entities
         public virtual string Email { get; set; }
 
         public virtual bool IsDisabled { get; set; }
-        public virtual DateTime CreatedAt { get; set; }
 
-        public virtual DateTime UpdatedAt { get; set; }
-
-        public virtual DateTime DeletedAt { get; set; }
     }
 
     public class UserEntityMap : ClassMap<UserEntity>
@@ -35,9 +31,6 @@ namespace MailSystem.Repositories.Entities
             Map(x => x.Phone).Length(50).Not.Nullable();
             Map(x => x.Email).Length(50).Not.Nullable();
             Map(x => x.IsDisabled);
-            Map(x => x.CreatedAt).CustomType<UtcDateTimeType>(); ;
-            Map(x => x.UpdatedAt).CustomType<UtcDateTimeType>(); ;
-            Map(x => x.DeletedAt).CustomType<UtcDateTimeType>(); ;
             Table("users");
         }
     }

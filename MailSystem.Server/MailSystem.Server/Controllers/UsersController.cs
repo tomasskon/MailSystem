@@ -43,13 +43,21 @@ namespace MailSystem.Server.Controllers
                 return NotFound(ex.Message);
             }
         }
+
         [HttpPost]
         public IActionResult CreateUser([FromBody] CreateUserContract createUserContract)
         {
-            var user = _mapper.Map<User>(createUserContract);
-            var userId = _userService.Create(user);
+            try
+            {
+                var user = _mapper.Map<User>(createUserContract);
+                var userId = _userService.Create(user);
 
-            return Ok(userId);
+                return Ok(userId);
+            }
+            catch(UserEmailAlreadyUsedException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPut]

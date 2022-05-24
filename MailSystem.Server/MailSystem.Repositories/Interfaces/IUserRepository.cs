@@ -13,10 +13,11 @@ namespace MailSystem.Repositories.Interfaces
         User Get(Guid userId);
 
         void Update(User user);
-       // void Delete(User user);
+
         bool CheckIfEmailAlreadyUsed(string email);
 
         bool CheckIfExists(Guid userId);
+
         void Delete(Guid userId);
     }
 }

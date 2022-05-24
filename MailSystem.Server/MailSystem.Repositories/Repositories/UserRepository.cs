@@ -33,9 +33,6 @@ namespace MailSystem.Repositories.Repositories
             using var session = _sessionFactory.OpenSession();
             using var transaction = session.BeginTransaction();
 
-            user.CreatedAt = DateTime.UtcNow;
-            user.UpdatedAt = DateTime.UtcNow;
-
             var userEntity = _mapper.Map<UserEntity>(user);
             session.Save(userEntity);
             transaction.Commit();
@@ -51,6 +48,7 @@ namespace MailSystem.Repositories.Repositories
 
             return _mapper.Map<User>(userEntity);
         }
+
         public void Update(User user)
         {
             using var session = _sessionFactory.OpenSession();
@@ -65,6 +63,7 @@ namespace MailSystem.Repositories.Repositories
             session.Update(userEntity);
             transaction.Commit();
         }
+
         public void Delete(Guid userId)
         {
             using var session = _sessionFactory.OpenSession();
@@ -74,11 +73,11 @@ namespace MailSystem.Repositories.Repositories
             userEntity.Email = Guid.NewGuid().ToString();
             userEntity.Phone = string.Empty;
             userEntity.Username = string.Empty;
-            userEntity.UpdatedAt = DateTime.UtcNow;
 
             session.Delete(userEntity);
             transaction.Commit();
         }
+
         public bool CheckIfEmailAlreadyUsed(string email)
         {
             using var session = _sessionFactory.OpenSession();
