@@ -1,7 +1,7 @@
 using System;
+using System.Collections.Generic;
 using FluentNHibernate.Data;
 using FluentNHibernate.Mapping;
-using NHibernate.Type;
 
 namespace MailSystem.Repositories.Entities
 {
@@ -14,12 +14,8 @@ namespace MailSystem.Repositories.Entities
         public virtual string Phone { get; set; }
 
         public virtual string Email { get; set; }
-        
-        public virtual DateTime CreatedAt { get; set; }
 
-        public virtual DateTime UpdatedAt { get; set; }
-        
-        public virtual DateTime? DeletedAt { get; set; }
+        public virtual IList<CourierPasswordEntity> CourierPasswords { get; set; }
     }
 
     public class CourierEntityMap : ClassMap<CourierEntity>
@@ -29,10 +25,7 @@ namespace MailSystem.Repositories.Entities
             Id(x => x.Id).GeneratedBy.Guid();
             Map(x => x.FullName).Length(50).Not.Nullable();
             Map(x => x.Phone).Length(25).Not.Nullable();
-            Map(x => x.Email).Length(50).Not.Nullable();
-            Map(x => x.CreatedAt).CustomType<UtcDateTimeType>();
-            Map(x => x.UpdatedAt).CustomType<UtcDateTimeType>();
-            Map(x => x.DeletedAt).CustomType<UtcDateTimeType>().Nullable();
+            Map(x => x.Email).Length(25).Not.Nullable();
             Table("couriers");
         }
     }

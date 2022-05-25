@@ -32,10 +32,7 @@ namespace MailSystem.Repositories.Repositories
         {
             using var session = _sessionFactory.OpenSession();
             using var transaction = session.BeginTransaction();
-            
-            courier.CreatedAt = DateTime.UtcNow;
-            courier.UpdatedAt = DateTime.UtcNow;
-            
+
             var courierEntity = _mapper.Map<CourierEntity>(courier);
             session.Save(courierEntity);
             transaction.Commit();
@@ -51,6 +48,15 @@ namespace MailSystem.Repositories.Repositories
 
             return _mapper.Map<Courier>(courierEntity);
         }
+
+        public Courier GetByEmail(string email)
+        {
+            using var session = _sessionFactory.OpenSession();
+
+            var courierEntity = session.Query<CourierEntity>().SingleOrDefault(x => x.Email == email);
+
+            return _mapper.Map<Courier>(courierEntity);
+        }
         
         public void Update(Courier courier)
         {
@@ -61,8 +67,7 @@ namespace MailSystem.Repositories.Repositories
             courierEntity.FullName = courier.FullName;
             courierEntity.Phone = courier.Phone;
             courierEntity.Email = courier.Email;
-            courierEntity.UpdatedAt = DateTime.UtcNow;
-            
+
             session.Update(courierEntity);
             transaction.Commit();
         }
@@ -75,10 +80,8 @@ namespace MailSystem.Repositories.Repositories
             var courierEntity = session.Get<CourierEntity>(courierId);
             courierEntity.Email = Guid.NewGuid().ToString();
             courierEntity.Phone = string.Empty;
-            courierEntity.UpdatedAt = DateTime.UtcNow;
-            courierEntity.DeletedAt = DateTime.UtcNow;
-            
-            session.Update(courierEntity);
+
+            session.Delete(courierEntity);
             transaction.Commit();
         }
         

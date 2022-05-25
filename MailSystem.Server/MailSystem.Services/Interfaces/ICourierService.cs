@@ -15,5 +15,7 @@ namespace MailSystem.Services.Interfaces
         void Update(Courier courier);
 
         void Delete(Guid guid);
+
+        Courier GetByEmail(string email);
     }
 }

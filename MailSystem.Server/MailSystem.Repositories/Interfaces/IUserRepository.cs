@@ -19,5 +19,7 @@ namespace MailSystem.Repositories.Interfaces
         bool CheckIfExists(Guid userId);
 
         void Delete(Guid userId);
+
+        User GetByEmail(string email);
     }
 }

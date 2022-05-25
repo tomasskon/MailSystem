@@ -23,7 +23,6 @@ namespace MailSystem.Services.Services
 
         public Guid Create(User user)
         {
-
             if (_userRepository.CheckIfEmailAlreadyUsed(user.Email))
                 throw new UserEmailAlreadyUsedException($"User email already used: {user.Email}");
 
@@ -64,6 +63,16 @@ namespace MailSystem.Services.Services
         {
             if (user.Email != email && !_userRepository.CheckIfEmailAlreadyUsed(email))
                 throw new UserEmailAlreadyUsedException($"User email already used: {user.Email}");
+        }
+
+        public User GetByEmail(string email)
+        {
+            var user = _userRepository.GetByEmail(email);
+            
+            if(user is null)
+                throw new CourierNotFoundException($"User not found. User email: {email}");
+
+            return user;
         }
     }
 }

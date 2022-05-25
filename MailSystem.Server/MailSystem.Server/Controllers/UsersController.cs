@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using AutoMapper;
+using MailSystem.Contracts;
 using MailSystem.Contracts.Users;
 using MailSystem.Domain.Exceptions;
 using MailSystem.Domain.Models;
 using MailSystem.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MailSystem.Server.Controllers
 {
+    [Authorize]
     [Route("[controller]/[action]")]
     public class UsersController : ControllerBase
     {
@@ -40,7 +43,7 @@ namespace MailSystem.Server.Controllers
             }
             catch (UserNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new StandardExceptionResponse(ex));
             }
         }
 
@@ -56,7 +59,7 @@ namespace MailSystem.Server.Controllers
             }
             catch(UserEmailAlreadyUsedException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new StandardExceptionResponse(ex));
             }
         }
 
@@ -73,7 +76,11 @@ namespace MailSystem.Server.Controllers
             }
             catch (UserNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new StandardExceptionResponse(ex));
+            }
+            catch(UserEmailAlreadyUsedException ex)
+            {
+                return NotFound(new StandardExceptionResponse(ex));
             }
         }
 
@@ -85,11 +92,10 @@ namespace MailSystem.Server.Controllers
                 _userService.Delete(userId);
 
                 return Ok();
-
             }
             catch (UserNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new StandardExceptionResponse(ex));
             }
         }
     }

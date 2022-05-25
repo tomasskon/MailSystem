@@ -34,9 +34,9 @@ namespace MailSystem.Repositories.Repositories
             using var transaction = session.BeginTransaction();
 
             var userEntity = _mapper.Map<UserEntity>(user);
-            session.Save(userEntity); 
+            session.Save(userEntity);
             transaction.Commit();
-            
+
             return userEntity.Id;
         }
 
@@ -55,7 +55,6 @@ namespace MailSystem.Repositories.Repositories
             using var transaction = session.BeginTransaction();
 
             var userEntity = _mapper.Map<UserEntity>(user);
-            userEntity.Username = user.Username;
             userEntity.FullName = user.FullName;
             userEntity.Phone = user.Phone;
             userEntity.Email = user.Email;
@@ -72,7 +71,6 @@ namespace MailSystem.Repositories.Repositories
             var userEntity = session.Get<UserEntity>(userId);
             userEntity.Email = Guid.NewGuid().ToString();
             userEntity.Phone = string.Empty;
-            userEntity.Username = string.Empty;
 
             session.Delete(userEntity);
             transaction.Commit();
@@ -90,6 +88,15 @@ namespace MailSystem.Repositories.Repositories
             using var session = _sessionFactory.OpenSession();
 
             return session.Query<UserEntity>().Any(x => x.Id == userId);
+        }
+        
+        public User GetByEmail(string email)
+        {
+            using var session = _sessionFactory.OpenSession();
+
+            var userEntity = session.Query<UserEntity>().SingleOrDefault(x => x.Email == email);
+
+            return _mapper.Map<User>(userEntity);
         }
     }
 }
