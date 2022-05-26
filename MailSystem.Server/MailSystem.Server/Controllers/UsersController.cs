@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using MailSystem.Contracts;
 using MailSystem.Contracts.Users;
@@ -25,20 +26,20 @@ namespace MailSystem.Server.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetUsers()
+        public async Task<IActionResult> GetUsers()
         {
-            var users = _userService.GetAll();
+            var users = await _userService.GetAll();
 
             return Ok(_mapper.Map<List<UserContract>>(users));
         }
 
         /// <response code="404">UserNotFoundException</response>
         [HttpGet]
-        public IActionResult GetUser(Guid userId)
+        public async Task<IActionResult> GetUser(Guid userId)
         {
             try
             {
-                var user = _userService.Get(userId);
+                var user = await _userService.Get(userId);
 
                 return Ok(_mapper.Map<UserContract>(user));
             }
@@ -50,12 +51,12 @@ namespace MailSystem.Server.Controllers
 
         /// <response code="400">UserEmailAlreadyUsedException</response>
         [HttpPost]
-        public IActionResult CreateUser([FromBody] CreateUserContract createUserContract)
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserContract createUserContract)
         {
             try
             {
                 var user = _mapper.Map<User>(createUserContract);
-                var userId = _userService.Create(user);
+                var userId = await _userService.Create(user);
 
                 return Ok(userId);
             }
@@ -68,12 +69,12 @@ namespace MailSystem.Server.Controllers
         /// <response code="404">UserNotFoundException</response>
         /// <response code="400">UserEmailAlreadyUsedException</response>
         [HttpPut]
-        public IActionResult UpdateUser([FromBody] UpdateUserContract updateUserContract)
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserContract updateUserContract)
         {
             try
             {
                 var user = _mapper.Map<User>(updateUserContract);
-                _userService.Update(user);
+                await _userService.Update(user);
 
                 return Ok();
 
@@ -90,11 +91,11 @@ namespace MailSystem.Server.Controllers
 
         /// <response code="404">UserNotFoundException</response>
         [HttpDelete]
-        public IActionResult DeleteUser(Guid userId)
+        public async Task<IActionResult> DeleteUser(Guid userId)
         {
             try
             {
-                _userService.Delete(userId);
+                await _userService.Delete(userId);
 
                 return Ok();
             }

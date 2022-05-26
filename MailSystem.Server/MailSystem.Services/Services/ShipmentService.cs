@@ -1,5 +1,6 @@
 using System;
-using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using MailSystem.Domain.Enums;
 using MailSystem.Domain.Models;
 using MailSystem.Repositories.Interfaces;
@@ -25,22 +26,22 @@ namespace MailSystem.Services.Services
             _shipmentEventService = shipmentEventService;
         }
 
-        public string CreateShipment(Shipment shipment)
+        public async Task<string> CreateShipment(Shipment shipment)
         {
-            _userService.CheckIfUserExists(shipment.UserId);
-            _mailboxService.CheckIfMailboxExists(shipment.MailBoxId);
-            _shipmentSizeService.CheckIfShipmentSizeExists(shipment.ShipmentSizeId);
+            await _userService.CheckIfUserExists(shipment.UserId);
+            await _mailboxService.CheckIfMailboxExists(shipment.MailBoxId);
+            await _shipmentSizeService.CheckIfShipmentSizeExists(shipment.ShipmentSizeId);
             
-            var shipmentId = _shipmentRepository.Create(shipment);
+            var shipmentId = await _shipmentRepository.Create(shipment);
             var trackingId = CreateTrackingId(shipmentId, shipment.UserId); 
                 
-            _shipmentEventService.CreateShipmentEvent(shipment.MailBoxId, ShipmentStatus.Submitted, trackingId);
+            await _shipmentEventService.CreateShipmentEvent(shipment.MailBoxId, ShipmentStatus.Submitted, trackingId);
 
             return trackingId;
         }
 
         private static string CreateTrackingId(Guid shipmentId, Guid userId) {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes($"{shipmentId}{userId}");
+            var plainTextBytes = Encoding.UTF8.GetBytes($"{shipmentId}{userId}");
             return Convert.ToBase64String(plainTextBytes);
         }
     }

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using AutoMapper;
 using MailSystem.Contracts;
 using MailSystem.Contracts.Shipment;
@@ -24,13 +25,13 @@ namespace MailSystem.Server.Controllers
 
         /// <response code="404">UserNotFoundException, MailboxNotFoundException, ShipmentSizeNotFoundException</response>
         [HttpPost]
-        public IActionResult RegisterShipment([FromBody] RegisterShipmentContract registerShipmentContract)
+        public async Task<IActionResult> RegisterShipment([FromBody] RegisterShipmentContract registerShipmentContract)
         {
             try
             {
                 var shipment = _mapper.Map<Shipment>(registerShipmentContract);
                 
-                return Ok(_shipmentService.CreateShipment(shipment));
+                return Ok(await _shipmentService.CreateShipment(shipment));
             }
             catch (UserNotFoundException ex)
             {
