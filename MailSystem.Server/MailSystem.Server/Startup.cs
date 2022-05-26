@@ -1,3 +1,6 @@
+using System;
+using System.IO;
+using System.Reflection;
 using AutoMapper;
 using MailSystem.Server.Infrastructure;
 using Microsoft.AspNetCore.Builder;
@@ -48,6 +51,11 @@ namespace MailSystem.Server
                         System.Array.Empty<string>()
                     }
                 });
+                
+                var basePath = AppDomain.CurrentDomain.BaseDirectory;
+                var fileName = typeof(Startup).GetTypeInfo().Assembly.GetName().Name + ".xml";
+                var path = Path.Combine(basePath.Remove(basePath.Length - 7), fileName);
+                c.IncludeXmlComments(path);
             });
             
             var mapperConfig = new MapperConfiguration(mc =>
