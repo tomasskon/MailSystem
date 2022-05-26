@@ -28,7 +28,7 @@ namespace MailSystem.Repositories.Entities
                 Map(x => x.Height).Not.Nullable();
                 Map(x => x.Width).Not.Nullable();
                 Map(x => x.Length).Not.Nullable();
-                Table("shipment_sizes");
+                Table("shipmentsizes");
             }
         }
         

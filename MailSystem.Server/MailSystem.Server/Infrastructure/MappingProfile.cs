@@ -28,6 +28,8 @@ namespace MailSystem.Server.Infrastructure
             CreateMap<ShipmentSize, ShipmentSizeEntity>().ReverseMap();
 
             CreateMap<Mailbox, MailboxEntity>().ReverseMap();
+
+            CreateMap<Shipment, ShipmentEntity>().ReverseMap();
         }
 
         private void MapContracts()

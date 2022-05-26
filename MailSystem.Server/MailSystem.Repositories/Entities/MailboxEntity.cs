@@ -9,16 +9,15 @@ namespace MailSystem.Repositories.Entities
         public virtual Guid Id { get; set; }
 
         public virtual string Location { get; set; }
-        
-        public class MailboxEntityMap : ClassMap<MailboxEntity>
+    }
+
+    public class MailboxEntityMap : ClassMap<MailboxEntity>
+    {
+        public MailboxEntityMap()
         {
-            public MailboxEntityMap()
-            {
-                Id(x => x.Id).GeneratedBy.Guid();
-                Map(x => x.Location).Length(255).Not.Nullable();
-                Table("mailboxes");
-            }
+            Id(x => x.Id).GeneratedBy.Guid();
+            Map(x => x.Location).Length(255).Not.Nullable();
+            Table("mailboxes");
         }
-        
     }
 }
