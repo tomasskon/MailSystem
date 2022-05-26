@@ -32,6 +32,7 @@ namespace MailSystem.Server.Controllers
             return Ok(_mapper.Map<List<UserContract>>(users));
         }
 
+        /// <response code="404">UserNotFoundException</response>
         [HttpGet]
         public IActionResult GetUser(Guid userId)
         {
@@ -47,6 +48,7 @@ namespace MailSystem.Server.Controllers
             }
         }
 
+        /// <response code="400">UserEmailAlreadyUsedException</response>
         [HttpPost]
         public IActionResult CreateUser([FromBody] CreateUserContract createUserContract)
         {
@@ -59,10 +61,12 @@ namespace MailSystem.Server.Controllers
             }
             catch(UserEmailAlreadyUsedException ex)
             {
-                return NotFound(new StandardExceptionResponse(ex));
+                return BadRequest(new StandardExceptionResponse(ex));
             }
         }
 
+        /// <response code="404">UserNotFoundException</response>
+        /// <response code="400">UserEmailAlreadyUsedException</response>
         [HttpPut]
         public IActionResult UpdateUser([FromBody] UpdateUserContract updateUserContract)
         {
@@ -80,10 +84,11 @@ namespace MailSystem.Server.Controllers
             }
             catch(UserEmailAlreadyUsedException ex)
             {
-                return NotFound(new StandardExceptionResponse(ex));
+                return BadRequest(new StandardExceptionResponse(ex));
             }
         }
 
+        /// <response code="404">UserNotFoundException</response>
         [HttpDelete]
         public IActionResult DeleteUser(Guid userId)
         {

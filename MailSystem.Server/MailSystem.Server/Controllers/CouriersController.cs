@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using AutoMapper;
+using MailSystem.Contracts;
 using MailSystem.Contracts.Couriers;
 using MailSystem.Domain.Exceptions;
 using MailSystem.Domain.Models;
@@ -22,7 +23,7 @@ namespace MailSystem.Server.Controllers
             _mapper = mapper;
             _courierService = courierService;
         }
-
+        
         [HttpGet]
         public IActionResult GetCouriers()
         {
@@ -31,6 +32,7 @@ namespace MailSystem.Server.Controllers
             return Ok(_mapper.Map<List<CourierContract>>(couriers));
         }
         
+        /// <response code="404">CourierNotFoundException</response>
         [HttpGet]
         public IActionResult GetCourier(Guid courierId)
         {
@@ -42,19 +44,29 @@ namespace MailSystem.Server.Controllers
             }
             catch (CourierNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new StandardExceptionResponse(ex));
             }
         }
 
+        /// <response code="400">CourierEmailAlreadyUsedException</response>
         [HttpPost]
         public IActionResult CreateCourier([FromBody] CreateCourierContract createCourierContract)
         {
-            var courier = _mapper.Map<Courier>(createCourierContract);
-            var courierId = _courierService.Create(courier);
+            try
+            {
+                var courier = _mapper.Map<Courier>(createCourierContract);
+                var courierId = _courierService.Create(courier);
             
-            return Ok(courierId);
+                return Ok(courierId);
+            }
+            catch (CourierEmailAlreadyUsedException ex)
+            {
+                return BadRequest(new StandardExceptionResponse(ex));
+            }
         }
         
+        /// <response code="404">CourierNotFoundException</response>
+        /// <response code="400">CourierEmailAlreadyUsedException</response>
         [HttpPut]
         public IActionResult UpdateCourier([FromBody] UpdateCourierContract updateCourierContract)
         {
@@ -62,16 +74,21 @@ namespace MailSystem.Server.Controllers
             {
                 var courier = _mapper.Map<Courier>(updateCourierContract);
                 _courierService.Update(courier);
-                
+
                 return Ok();
 
             }
             catch (CourierNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new StandardExceptionResponse(ex));
+            }
+            catch (CourierEmailAlreadyUsedException ex)
+            {
+                return BadRequest(new StandardExceptionResponse(ex));
             }
         }
 
+        /// <response code="404">CourierNotFoundException</response>
         [HttpDelete]
         public IActionResult DeleteCourier(Guid courierId)
         {
