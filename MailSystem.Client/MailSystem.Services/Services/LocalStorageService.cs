@@ -1,9 +1,9 @@
 using System.Text.Json;
 using System.Threading.Tasks;
-using MailSystem.Client.Interfaces;
+using MailSystem.Services.Interfaces;
 using Microsoft.JSInterop;
 
-namespace MailSystem.Client.Services
+namespace MailSystem.Services.Services
 {
     public class LocalStorageService : ILocalStorageService
     {

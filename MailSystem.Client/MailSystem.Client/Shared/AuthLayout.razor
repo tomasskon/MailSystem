@@ -1,12 +1,10 @@
-﻿@using MailSystem.Client.Interfaces
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
 
 @inject IAuthenticationService _authenticationService
 
-<div class="container">
-    <div class="row" style="margin-top: 10vw;">
-        @Body
-    </div>
+
+<div class="container-fluid">
+    @Body
 </div>
 
 @code {

@@ -1,0 +1,133 @@
+﻿@page "/login"
+@using Microsoft.IdentityModel.Tokens
+@using MailSystem.Http.Exceptions
+@layout AuthLayout
+
+@inject IAuthenticationService AuthenticationService;
+@inject IAuthenticationHttpClient AuthenticationHttpClient;
+@inject NavigationManager NavigationManager;
+
+<div class="row main-row">
+    <div class="col-md-6 d-md-flex d-none" style="background-image: url('https://media.discordapp.net/attachments/777231117320847400/979137727398285393/unknown.png'); background-size: cover; background-position: center"></div>
+    <div class="col-md-6 d-flex align-items-center">
+        <div class="p-2 p-md-5 flex-100">
+            <div class="mb-4">
+                <h1 class="text-center">Prisijungimas</h1>
+            </div>
+            @if (!_errorMessage.IsNullOrEmpty())
+            {
+                <div class="alert alert-danger mb-2">
+                    @_errorMessage
+                </div>
+            }
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2>Vartotojas</h2>
+                    <EditForm Model="@_userLogin" OnValidSubmit="@HandleUserLoginSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary/>
+                        <div class="form-group">
+                            <label for="email">El. pašto adresas</label>
+                            <InputText type="email" id="email" class="form-control" @bind-Value="@_userLogin.EmailAddress"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Slaptažodis</label>
+                            <InputText type="password" id="password" class="form-control" @bind-Value="@_userLogin.Password"/>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Prisijungti</button>
+                        </div>
+                    </EditForm>
+                    <div>
+                        <a href="user-register">Registracija</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2>Kurjeris</h2>
+                    <EditForm Model="@_courierLogin" OnValidSubmit="@HandleCourierLoginSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary/>
+                        <div class="form-group">
+                            <label for="courier_email">El. pašto adresas</label>
+                            <InputText type="email" id="courier_email" class="form-control" @bind-Value="@_courierLogin.EmailAddress"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="courier_password">Slaptažodis</label>
+                            <InputText type="password" id="courier_password" class="form-control" @bind-Value="@_courierLogin.Password"/>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Prisijungti</button>
+                        </div>
+                    </EditForm>
+                    <div>
+                        <a href="courier-register">Registracija</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private readonly UserLoginContract _userLogin = new();
+    private readonly CourierLoginContract _courierLogin = new();
+    private string _errorMessage = "";
+
+    private bool ValidateFields<T>(T contract)
+    {
+        _errorMessage = "";
+
+        var emailAddress = contract.GetType().GetProperty("EmailAddress")?.GetValue(contract)?.ToString();
+        
+        if (emailAddress.IsNullOrEmpty())
+        {
+            _errorMessage = "El. pašto adresas negali būti tuščias";
+        }
+
+        return _errorMessage.IsNullOrEmpty();
+    }
+    
+    private async Task HandleUserLoginSubmit()
+    {
+        if (!ValidateFields(_userLogin))
+            return;
+
+        try
+        {
+            var jwtToken = await AuthenticationHttpClient.UserLogin(_userLogin);
+            await AuthenticationService.Login(jwtToken);
+        }
+        catch (ServerRequestException exception)
+        {
+            _errorMessage = exception.ServerExceptionName switch
+            {
+                "UserNotFoundException" => "Vartotojas nerastas",
+                "InvalidPasswordException" => "Slaptažodis netinka",
+                _ => exception.ServerExceptionMessage
+            };
+        }
+    }
+    
+    private async Task HandleCourierLoginSubmit()
+    {
+        if (!ValidateFields(_courierLogin))
+            return;
+
+        try
+        {
+            var jwtToken = await AuthenticationHttpClient.CourierLogin(_courierLogin);
+            await AuthenticationService.Login(jwtToken);
+        }
+        catch (ServerRequestException exception)
+        {
+            _errorMessage = exception.ServerExceptionName switch
+            {
+                "CourierNotFoundException" => "Vartotojas nerastas",
+                "InvalidPasswordException" => "Slaptažodis netinka",
+                _ => exception.ServerExceptionMessage
+            };
+        }
+    }
+}

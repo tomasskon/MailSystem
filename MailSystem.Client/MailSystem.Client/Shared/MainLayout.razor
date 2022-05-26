@@ -1,6 +1,5 @@
-﻿@using MailSystem.Client.Interfaces
-@inherits LayoutComponentBase
-@inject IAuthenticationService _authenticationService
+﻿@inherits LayoutComponentBase
+@inject IAuthenticationService AuthenticationService
 
 <div class="page">
     <div class="sidebar">
@@ -8,17 +7,6 @@
     </div>
 
     <div class="main">
-        <div class="top-row px-4">
-            <div class="dropdown ml-md-auto">
-              <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Name
-              </button>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#" @onclick="Logout">Logout</a>
-              </div>
-            </div>
-        </div>
-
         <div class="content px-4">
             @Body
         </div>
@@ -28,11 +16,11 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-        await _authenticationService.OnlyAuthenticated();
+        await AuthenticationService.OnlyAuthenticated();
     }
 
     private async void Logout()
     {
-        await _authenticationService.Logout();
+        await AuthenticationService.Logout();
     }
 }
