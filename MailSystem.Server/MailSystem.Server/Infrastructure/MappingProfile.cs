@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MailSystem.Contracts.Authentication;
 using MailSystem.Contracts.Couriers;
+using MailSystem.Contracts.Mailboxes;
 using MailSystem.Contracts.ShipmentSizes;
 using MailSystem.Contracts.Users;
 using MailSystem.Domain.Models;
@@ -25,6 +26,8 @@ namespace MailSystem.Server.Infrastructure
             CreateMap<UserPassword, UserPasswordEntity>().ReverseMap();
 
             CreateMap<ShipmentSize, ShipmentSizeEntity>().ReverseMap();
+
+            CreateMap<Mailbox, MailboxEntity>().ReverseMap();
         }
 
         private void MapContracts()
@@ -40,6 +43,8 @@ namespace MailSystem.Server.Infrastructure
             CreateMap<Courier, CourierRegisterContract>().ReverseMap();
 
             CreateMap<ShipmentSize, ShipmentSizeContract>().ReverseMap();
+
+            CreateMap<Mailbox, MailboxContract>().ReverseMap();
         }
     }
 }
