@@ -70,7 +70,7 @@ namespace MailSystem.Services.Services
             var user = _userRepository.GetByEmail(email);
             
             if(user is null)
-                throw new CourierNotFoundException($"User not found. User email: {email}");
+                throw new UserNotFoundException($"User not found. User email: {email}");
 
             return user;
         }

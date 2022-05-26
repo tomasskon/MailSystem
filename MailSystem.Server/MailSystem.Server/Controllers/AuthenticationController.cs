@@ -13,13 +13,15 @@ namespace MailSystem.Server.Controllers
     {
         private readonly IAuthenticationService _authenticationService;
         private readonly IMapper _mapper;
-
+        
         public AuthenticationController(IAuthenticationService authenticationService, IMapper mapper)
         {
             _authenticationService = authenticationService;
             _mapper = mapper;
         }
-
+        
+        /// <response code="404">CourierNotFoundException</response>
+        /// <response code="400">InvalidPasswordException</response>
         [HttpPost]
         public IActionResult CourierLogin([FromBody] CourierLoginContract courierLoginContract)
         {
@@ -37,7 +39,8 @@ namespace MailSystem.Server.Controllers
                 return BadRequest(new StandardExceptionResponse(ex)); 
             }
         }
-
+        
+        /// <response code="400">CourierEmailAlreadyUsedException</response>
         [HttpPost]
         public IActionResult CourierRegister([FromBody] CourierRegisterContract courierRegisterContract)
         {
@@ -53,6 +56,8 @@ namespace MailSystem.Server.Controllers
             }
         }
         
+        /// <response code="404">UserNotFoundException</response>
+        /// <response code="400">InvalidPasswordException</response>
         [HttpPost]
         public IActionResult UserLogin([FromBody] UserLoginContract userLoginContract)
         {
@@ -70,7 +75,8 @@ namespace MailSystem.Server.Controllers
                 return BadRequest(new StandardExceptionResponse(ex)); 
             }
         }
-
+        
+        /// <response code="400">UserEmailAlreadyUsedException</response>
         [HttpPost]
         public IActionResult UserRegister([FromBody] UserRegisterContract userRegisterContract)
         {
