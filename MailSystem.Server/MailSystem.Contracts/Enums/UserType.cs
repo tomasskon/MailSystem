@@ -1,4 +1,4 @@
-namespace MailSystem.Domain.Enums
+namespace MailSystem.Contracts.Enums
 {
     public enum UserType
     {

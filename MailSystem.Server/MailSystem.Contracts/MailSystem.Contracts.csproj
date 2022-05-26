@@ -6,4 +6,8 @@
         <Version>1.0.0</Version>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
+    </ItemGroup>
+
 </Project>

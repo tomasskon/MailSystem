@@ -33,7 +33,7 @@ namespace MailSystem.Services.Services
             var courierPassword = _courierPasswordRepository.GetByUserId(courier.Id);
             _passwordService.ValidatePassword(password, courierPassword.PasswordHash, courierPassword.PasswordSalt);
             
-            return _tokenService.GetJwtToken(courier.Id, UserType.Couerier);
+            return _tokenService.GetJwtToken(courier.Id, UserType.Courier);
         }
 
         public string CourierRegister(Courier courier, string password)
@@ -43,7 +43,7 @@ namespace MailSystem.Services.Services
             var (passwordHash, passwordSalt) = _passwordService.CreateHashedPassword(password);
             _courierPasswordRepository.Create(passwordHash, passwordSalt, courierId);
             
-            return _tokenService.GetJwtToken(courierId, UserType.Couerier);
+            return _tokenService.GetJwtToken(courierId, UserType.Courier);
         }
 
         public string UserLogin(string emailAddress, string password)
