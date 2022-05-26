@@ -1,15 +1,16 @@
 using System;
-using MailSystem.Domain.Enums;
+using MailSystem.Contracts.Enums;
+using MailSystem.Contracts.Mailboxes;
 
-namespace MailSystem.Domain.Models
+namespace MailSystem.Contracts.ShipmentEvents
 {
-    public class ShipmentEvent
+    public class DetailedShipmentEventContract
     {
         public Guid Id { get; set; }
         
         public string TrackingId { get; set; }
         
-        public Guid MailboxId { get; set; }
+        public MailboxContract Mailbox { get; set; }
         
         public DateTime EventDate { get; set; }
         

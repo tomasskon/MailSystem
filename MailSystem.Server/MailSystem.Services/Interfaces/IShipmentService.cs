@@ -5,6 +5,6 @@ namespace MailSystem.Services.Interfaces
 {
     public interface IShipmentService
     {
-        Guid CreateShipment(Shipment shipment);
+        string CreateShipment(Shipment shipment);
     }
 }

@@ -47,7 +47,7 @@ namespace MailSystem.Services.Services
             if (existingCourier is null)
                 throw new CourierNotFoundException($"Courier not found. Courier id: {courier.Id}");
             
-            CheckEmailValidity(courier, courier.Email);
+            CheckEmailValidity(existingCourier, courier.Email);
             
             _courierRepository.Update(courier);
         }
@@ -70,10 +70,10 @@ namespace MailSystem.Services.Services
             return courier;
         }
 
-        private void CheckEmailValidity(Courier courier, string email)
+        private void CheckEmailValidity(Courier existingCourier, string emailToChange)
         {
-            if (courier.Email != email && !_courierRepository.CheckIfEmailAlreadyUsed(email))
-                throw new CourierEmailAlreadyUsedException($"Courier email already used: {courier.Email}");
+            if (existingCourier.Email != emailToChange && _courierRepository.CheckIfEmailAlreadyUsed(emailToChange))
+                throw new CourierEmailAlreadyUsedException($"Courier email already used: {existingCourier.Email}");
         }
         
     }

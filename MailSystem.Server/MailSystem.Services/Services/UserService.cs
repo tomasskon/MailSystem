@@ -46,7 +46,7 @@ namespace MailSystem.Services.Services
             if (existingUser is null)
                 throw new UserNotFoundException($"User not found. User id: {user.Id}");
 
-            CheckEmailValidity(user, user.Email);
+            CheckEmailValidity(existingUser, user.Email);
 
             _userRepository.Update(user);
         }
@@ -59,10 +59,10 @@ namespace MailSystem.Services.Services
             _userRepository.Delete(userId);
         }
 
-        private void CheckEmailValidity(User user, string email)
+        private void CheckEmailValidity(User existingUser, string emailToChange)
         {
-            if (user.Email != email && !_userRepository.CheckIfEmailAlreadyUsed(email))
-                throw new UserEmailAlreadyUsedException($"User email already used: {user.Email}");
+            if (existingUser.Email != emailToChange && _userRepository.CheckIfEmailAlreadyUsed(emailToChange))
+                throw new UserEmailAlreadyUsedException($"User email already used: {existingUser.Email}");
         }
 
         public User GetByEmail(string email)
