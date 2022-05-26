@@ -13,6 +13,7 @@ namespace MailSystem.Server.Infrastructure
             services.AddSingleton<IAuthenticationService, AuthenticationService>();
             services.AddSingleton<IPasswordService, PasswordService>();
             services.AddSingleton<ICourierService, CourierService>();
+            services.AddSingleton<IShipmentSizeService, ShipmentSizeService>();
         }
     }
 }
