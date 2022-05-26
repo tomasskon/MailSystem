@@ -2,6 +2,7 @@
 @layout AuthLayout
 @using Microsoft.IdentityModel.Tokens
 @using MailSystem.Http.Exceptions
+@using com.google.i18n.phonenumbers
 
 @inject IAuthenticationHttpClient AuthenticationHttpClient;
 @inject IAuthenticationService AuthenticationService;
@@ -13,7 +14,7 @@
             <div class="mb-4">
                 <h1 class="text-center">Kurjerio registracija</h1>
             </div>
-            @if (!_errorMessage.IsNullOrEmpty())
+            @if (!string.IsNullOrEmpty(_errorMessage))
             {
                 <div class="alert alert-danger mb-2">
                     @_errorMessage
@@ -61,6 +62,7 @@
     private readonly CourierRegisterContract _courierRegisterContract = new();
     private string _passwordConfirmation;
     private string _errorMessage = "";
+    private readonly PhoneNumberUtil _phoneNumberUtil = PhoneNumberUtil.getInstance();
 
     private bool ValidateFields()
     {
@@ -70,24 +72,28 @@
         {
             _errorMessage = "Slaptažodžiai nesutampa";
         } 
-        else if (_courierRegisterContract.FullName.IsNullOrEmpty())
+        else if (string.IsNullOrEmpty(_courierRegisterContract.FullName))
         {
             _errorMessage = "Vardas ir pavardė yra privalomas laukelis";
         }
-        else if (_courierRegisterContract.Email.IsNullOrEmpty())
+        else if (string.IsNullOrEmpty(_courierRegisterContract.Email))
         {
             _errorMessage = "El. pašto adresas negali būti tuščias";
         }
-        else if (_courierRegisterContract.Phone.IsNullOrEmpty())
+        else if (string.IsNullOrEmpty(_courierRegisterContract.Phone))
         {
             _errorMessage = "Telefono numeris negali būti tuščias";
         }
-        else if (_courierRegisterContract.Password.IsNullOrEmpty())
+        else if (string.IsNullOrEmpty(_courierRegisterContract.Password))
         {
             _errorMessage = "Slaptažodis negali būti tuščias";
         }
+        else if (!_phoneNumberUtil.isPossibleNumber(_courierRegisterContract.Phone, "LT"))
+        {
+            _errorMessage = "Telefono numeris nėra teisingas";
+        }
 
-        return _errorMessage.IsNullOrEmpty();
+        return string.IsNullOrEmpty(_errorMessage);
     }
     
     private async Task HandleCourierRegisterSubmit()
