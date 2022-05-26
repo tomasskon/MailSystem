@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using AutoMapper;
 using MailSystem.Contracts;
 using MailSystem.Contracts.ShipmentEvents;
@@ -26,11 +26,11 @@ namespace MailSystem.Server.Controllers
 
         /// <response code="404">NoShipmentEventsFoundException</response>
         [HttpGet]
-        public IActionResult GetEventsByTrackingId(string trackingId)
+        public async Task<IActionResult> GetEventsByTrackingId(string trackingId)
         {
             try
             {
-                var shipmentEvents = _shipmentEventService.GetAllByTrackingId(trackingId);
+                var shipmentEvents =await _shipmentEventService.GetAllByTrackingId(trackingId);
 
                 return Ok(_mapper.Map<List<DetailedShipmentEventContract>>(shipmentEvents));
             }
@@ -41,9 +41,9 @@ namespace MailSystem.Server.Controllers
         }
         
         [HttpPost]
-        public IActionResult UpdateShipmentStatus([FromBody]UpdateShipmentStatusContract updateShipmentStatusContract)
+        public async Task<IActionResult> UpdateShipmentStatus([FromBody]UpdateShipmentStatusContract updateShipmentStatusContract)
         {
-            _shipmentEventService.CreateShipmentEvent(
+            await _shipmentEventService.CreateShipmentEvent(
                 updateShipmentStatusContract.MailboxId,
                 (ShipmentStatus)(updateShipmentStatusContract.ShipmentStatus), 
                 updateShipmentStatusContract.TrackingId);

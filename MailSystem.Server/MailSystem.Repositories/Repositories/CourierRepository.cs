@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using MailSystem.Domain.Models;
 using MailSystem.Repositories.Entities;
 using MailSystem.Repositories.Interfaces;
 using NHibernate;
+using NHibernate.Linq;
 
 namespace MailSystem.Repositories.Repositories
 {
@@ -20,83 +22,83 @@ namespace MailSystem.Repositories.Repositories
             _mapper = mapper;
         }
 
-        public IEnumerable<Courier> GetAll()
+        public async Task<IEnumerable<Courier>> GetAll()
         {
             using var session = _sessionFactory.OpenSession();
-            var courierEntities = session.Query<CourierEntity>().ToList();
+            var courierEntities = await session.Query<CourierEntity>().ToListAsync();
 
             return _mapper.Map<List<Courier>>(courierEntities);
         }
 
-        public Guid Create(Courier courier)
+        public async Task<Guid> Create(Courier courier)
         {
             using var session = _sessionFactory.OpenSession();
             using var transaction = session.BeginTransaction();
 
             var courierEntity = _mapper.Map<CourierEntity>(courier);
-            session.Save(courierEntity);
-            transaction.Commit();
+            await session.SaveAsync(courierEntity);
+            await transaction.CommitAsync();
             
             return courierEntity.Id;
         }
 
-        public Courier Get(Guid courierId)
+        public async Task<Courier> Get(Guid courierId)
         {
             using var session = _sessionFactory.OpenSession();
 
-            var courierEntity = session.Get<CourierEntity>(courierId);
+            var courierEntity = await session.GetAsync<CourierEntity>(courierId);
 
             return _mapper.Map<Courier>(courierEntity);
         }
 
-        public Courier GetByEmail(string email)
+        public async Task<Courier> GetByEmail(string email)
         {
             using var session = _sessionFactory.OpenSession();
 
-            var courierEntity = session.Query<CourierEntity>().SingleOrDefault(x => x.Email == email);
+            var courierEntity = await session.Query<CourierEntity>().SingleOrDefaultAsync(x => x.Email == email);
 
             return _mapper.Map<Courier>(courierEntity);
         }
         
-        public void Update(Courier courier)
+        public async Task Update(Courier courier)
         {
             using var session = _sessionFactory.OpenSession();
             using var transaction = session.BeginTransaction();
             
-            var courierEntity = session.Get<CourierEntity>(courier.Id);
+            var courierEntity = await session.GetAsync<CourierEntity>(courier.Id);
             courierEntity.FullName = courier.FullName;
             courierEntity.Phone = courier.Phone;
             courierEntity.Email = courier.Email;
 
-            session.Update(courierEntity);
-            transaction.Commit();
+            await session.UpdateAsync(courierEntity);
+            await transaction.CommitAsync();
         }
 
-        public void Delete(Guid courierId)
+        public async Task Delete(Guid courierId)
         {
             using var session = _sessionFactory.OpenSession();
             using var transaction = session.BeginTransaction();
             
-            var courierEntity = session.Get<CourierEntity>(courierId);
+            var courierEntity = await session.GetAsync<CourierEntity>(courierId);
             courierEntity.Email = Guid.NewGuid().ToString();
             courierEntity.Phone = string.Empty;
 
-            session.Delete(courierEntity);
-            transaction.Commit();
+            await session.DeleteAsync(courierEntity);
+            await transaction.CommitAsync();
         }
         
-        public bool CheckIfEmailAlreadyUsed(string email)
+        public async Task<bool> CheckIfEmailAlreadyUsed(string email)
         {
             using var session = _sessionFactory.OpenSession();
 
-            return session.Query<CourierEntity>().Any(x => x.Email == email);
+            return await session.Query<CourierEntity>().AnyAsync(x => x.Email == email);
         }
         
-        public bool CheckIfExists(Guid courierId)
+        public async Task<bool> CheckIfExists(Guid courierId)
         {
             using var session = _sessionFactory.OpenSession();
 
-            return session.Query<CourierEntity>().Any(x => x.Id == courierId);
+            return await session.Query<CourierEntity>().AnyAsync(x => x.Id == courierId);
         }
     }
 }

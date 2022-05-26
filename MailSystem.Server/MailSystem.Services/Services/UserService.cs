@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MailSystem.Domain.Models;
 using MailSystem.Exception;
 using MailSystem.Repositories.Interfaces;
@@ -16,22 +17,22 @@ namespace MailSystem.Services.Services
             _userRepository = userRepository;
         }
 
-        public IEnumerable<User> GetAll()
+        public async Task<IEnumerable<User>> GetAll()
         {
-            return _userRepository.GetAll();
+            return await _userRepository.GetAll();
         }
 
-        public Guid Create(User user)
+        public async Task<Guid> Create(User user)
         {
-            if (_userRepository.CheckIfEmailAlreadyUsed(user.Email))
+            if (await _userRepository.CheckIfEmailAlreadyUsed(user.Email))
                 throw new UserEmailAlreadyUsedException($"User email already used: {user.Email}");
 
-            return _userRepository.Create(user);
+            return await _userRepository.Create(user);
         }
 
-        public User Get(Guid userId)
+        public async Task<User> Get(Guid userId)
         {
-            var user = _userRepository.Get(userId);
+            var user = await _userRepository.Get(userId);
 
             if (user is null)
                 throw new UserNotFoundException($"User not found. User id: {userId}");
@@ -39,35 +40,35 @@ namespace MailSystem.Services.Services
             return user;
         }
 
-        public void Update(User user)
+        public async Task Update(User user)
         {
-            var existingUser = _userRepository.Get(user.Id);
+            var existingUser = await _userRepository.Get(user.Id);
 
             if (existingUser is null)
                 throw new UserNotFoundException($"User not found. User id: {user.Id}");
 
-            CheckEmailValidity(existingUser, user.Email);
+            await CheckEmailValidity(existingUser, user.Email);
 
-            _userRepository.Update(user);
+            await _userRepository.Update(user);
         }
 
-        public void Delete(Guid userId)
+        public async Task Delete(Guid userId)
         {
-            if (!_userRepository.CheckIfExists(userId))
+            if (!await _userRepository.CheckIfExists(userId))
                 throw new UserNotFoundException($"User not found. User id: {userId}");
 
-            _userRepository.Delete(userId);
+            await _userRepository.Delete(userId);
         }
 
-        private void CheckEmailValidity(User existingUser, string emailToChange)
+        private async Task CheckEmailValidity(User existingUser, string emailToChange)
         {
-            if (existingUser.Email != emailToChange && _userRepository.CheckIfEmailAlreadyUsed(emailToChange))
+            if (existingUser.Email != emailToChange && await _userRepository.CheckIfEmailAlreadyUsed(emailToChange))
                 throw new UserEmailAlreadyUsedException($"User email already used: {existingUser.Email}");
         }
 
-        public User GetByEmail(string email)
+        public async Task<User> GetByEmail(string email)
         {
-            var user = _userRepository.GetByEmail(email);
+            var user = await _userRepository.GetByEmail(email);
             
             if(user is null)
                 throw new UserNotFoundException($"User not found. User email: {email}");
@@ -75,9 +76,9 @@ namespace MailSystem.Services.Services
             return user;
         }
 
-        public void CheckIfUserExists(Guid userId)
+        public async Task CheckIfUserExists(Guid userId)
         {
-            if (!_userRepository.CheckIfExists(userId))
+            if (!await _userRepository.CheckIfExists(userId))
                 throw new UserNotFoundException($"User not found: {userId}");
         }
     }

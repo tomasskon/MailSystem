@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using MailSystem.Domain.Models;
 using MailSystem.Repositories.Entities;
 using MailSystem.Repositories.Interfaces;
 using NHibernate;
+using NHibernate.Linq;
 
 namespace MailSystem.Repositories.Repositories
 {
@@ -20,19 +22,19 @@ namespace MailSystem.Repositories.Repositories
             _mapper = mapper;
         }
 
-        public IEnumerable<Mailbox> GetAll()
+        public async Task<IEnumerable<Mailbox>> GetAll()
         {
             using var session = _sessionFactory.OpenSession();
-            var mailboxEntities = session.Query<MailboxEntity>().ToList();
+            var mailboxEntities = await session.Query<MailboxEntity>().ToListAsync();
 
             return _mapper.Map<List<Mailbox>>(mailboxEntities);
         }
 
-        public bool CheckIfExists(Guid mailboxId)
+        public async Task<bool> CheckIfExists(Guid mailboxId)
         {
             using var session = _sessionFactory.OpenSession();
 
-            return session.Query<MailboxEntity>().Any(x => x.Id == mailboxId);
+            return await session.Query<MailboxEntity>().AnyAsync(x => x.Id == mailboxId);
         }
     }
 }

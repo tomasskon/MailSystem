@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MailSystem.Domain.Enums;
 using MailSystem.Domain.Models;
 using MailSystem.Exception;
@@ -17,9 +18,9 @@ namespace MailSystem.Services.Services
             _shipmentEventRepository = shipmentEventRepository;
         }
 
-        public List<DetailedShipmentEvent> GetAllByTrackingId(string trackingId)
+        public async Task<List<DetailedShipmentEvent>> GetAllByTrackingId(string trackingId)
         {
-            var shipmentEvents = _shipmentEventRepository.GetAllByTrackingId(trackingId);
+            var shipmentEvents = await _shipmentEventRepository.GetAllByTrackingId(trackingId);
 
             if (shipmentEvents == null)
                 throw new NoShipmentEventsFoundException($"No shipment events found for tracking id: {trackingId}");
@@ -27,11 +28,11 @@ namespace MailSystem.Services.Services
             return shipmentEvents;
         }
 
-        public void CreateShipmentEvent(Guid? mailboxId, ShipmentStatus shipmentStatus, string trackingId)
+        public async Task CreateShipmentEvent(Guid? mailboxId, ShipmentStatus shipmentStatus, string trackingId)
         {
             var shipment = new ShipmentEvent {MailboxId = mailboxId, ShipmentStatus = shipmentStatus, TrackingId = trackingId};
 
-            _shipmentEventRepository.Create(shipment);
+            await _shipmentEventRepository.Create(shipment);
         }
     }
 }

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MailSystem.Domain.Models;
 
 namespace MailSystem.Repositories.Interfaces
 {
     public interface IShipmentSizeRepository
     {
-        IEnumerable<ShipmentSize> GetAll();
+        Task<IEnumerable<ShipmentSize>> GetAll();
 
-        bool CheckIfExists(Guid shipmentSizeId);
+        Task<bool> CheckIfExists(Guid shipmentSizeId);
     }
 }

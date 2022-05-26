@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using AutoMapper;
 using MailSystem.Contracts;
 using MailSystem.Contracts.Authentication;
@@ -23,11 +24,11 @@ namespace MailSystem.Server.Controllers
         /// <response code="404">CourierNotFoundException</response>
         /// <response code="400">InvalidPasswordException</response>
         [HttpPost]
-        public IActionResult CourierLogin([FromBody] CourierLoginContract courierLoginContract)
+        public async Task<IActionResult> CourierLogin([FromBody] CourierLoginContract courierLoginContract)
         {
             try
             {
-                return Ok(_authenticationService.CourierLogin(courierLoginContract.EmailAddress,
+                return Ok(await _authenticationService.CourierLogin(courierLoginContract.EmailAddress,
                     courierLoginContract.Password));
             }
             catch (CourierNotFoundException ex)
@@ -42,13 +43,13 @@ namespace MailSystem.Server.Controllers
         
         /// <response code="400">CourierEmailAlreadyUsedException</response>
         [HttpPost]
-        public IActionResult CourierRegister([FromBody] CourierRegisterContract courierRegisterContract)
+        public async Task<IActionResult> CourierRegister([FromBody] CourierRegisterContract courierRegisterContract)
         {
             try
             {
                 var courier = _mapper.Map<Courier>(courierRegisterContract);
             
-                return Ok(_authenticationService.CourierRegister(courier, courierRegisterContract.Password));
+                return Ok(await _authenticationService.CourierRegister(courier, courierRegisterContract.Password));
             }
             catch (CourierEmailAlreadyUsedException ex)
             {
@@ -59,11 +60,11 @@ namespace MailSystem.Server.Controllers
         /// <response code="404">UserNotFoundException</response>
         /// <response code="400">InvalidPasswordException</response>
         [HttpPost]
-        public IActionResult UserLogin([FromBody] UserLoginContract userLoginContract)
+        public async Task<IActionResult> UserLogin([FromBody] UserLoginContract userLoginContract)
         {
             try
             {
-                return Ok(_authenticationService.UserLogin(userLoginContract.EmailAddress,
+                return Ok(await _authenticationService.UserLogin(userLoginContract.EmailAddress,
                     userLoginContract.Password));
             }
             catch (UserNotFoundException ex)
@@ -78,13 +79,13 @@ namespace MailSystem.Server.Controllers
         
         /// <response code="400">UserEmailAlreadyUsedException</response>
         [HttpPost]
-        public IActionResult UserRegister([FromBody] UserRegisterContract userRegisterContract)
+        public async Task<IActionResult> UserRegister([FromBody] UserRegisterContract userRegisterContract)
         {
             try
             {
                 var user = _mapper.Map<User>(userRegisterContract);
             
-                return Ok(_authenticationService.UserRegister(user, userRegisterContract.Password));
+                return Ok(await _authenticationService.UserRegister(user, userRegisterContract.Password));
             }
             catch (UserEmailAlreadyUsedException ex)
             {

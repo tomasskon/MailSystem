@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MailSystem.Domain.Models;
 using MailSystem.Exception;
 using MailSystem.Repositories.Interfaces;
@@ -16,22 +17,22 @@ namespace MailSystem.Services.Services
             _courierRepository = courierRepository;
         }
 
-        public IEnumerable<Courier> GetAll()
+        public async Task<IEnumerable<Courier>> GetAll()
         {
-            return _courierRepository.GetAll();
+            return await _courierRepository.GetAll();
         }
 
-        public Guid Create(Courier courier)
+        public async Task<Guid> Create(Courier courier)
         {
-            if (_courierRepository.CheckIfEmailAlreadyUsed(courier.Email))
+            if (await _courierRepository.CheckIfEmailAlreadyUsed(courier.Email))
                 throw new CourierEmailAlreadyUsedException($"Courier email already used: {courier.Email}");
             
-            return _courierRepository.Create(courier);
+            return await _courierRepository.Create(courier);
         }
 
-        public Courier Get(Guid courierId)
+        public async Task<Courier> Get(Guid courierId)
         {
-            var courier = _courierRepository.Get(courierId);
+            var courier = await _courierRepository.Get(courierId);
             
             if (courier is null)
                 throw new CourierNotFoundException($"Courier not found. Courier id: {courierId}");
@@ -39,29 +40,29 @@ namespace MailSystem.Services.Services
             return courier;
         }
 
-        public void Update(Courier courier)
+        public async Task Update(Courier courier)
         {
-            var existingCourier = _courierRepository.Get(courier.Id);
+            var existingCourier = await _courierRepository.Get(courier.Id);
 
             if (existingCourier is null)
                 throw new CourierNotFoundException($"Courier not found. Courier id: {courier.Id}");
             
-            CheckEmailValidity(existingCourier, courier.Email);
+            await CheckEmailValidity(existingCourier, courier.Email);
             
-            _courierRepository.Update(courier);
+            await _courierRepository.Update(courier);
         }
 
-        public void Delete(Guid courierId)
+        public async Task Delete(Guid courierId)
         {
-            if (!_courierRepository.CheckIfExists(courierId))
+            if (!await _courierRepository.CheckIfExists(courierId))
                 throw new CourierNotFoundException($"Courier not found. Courier id: {courierId}");
             
-            _courierRepository.Delete(courierId);
+            await _courierRepository.Delete(courierId);
         }
 
-        public Courier GetByEmail(string email)
+        public async Task<Courier> GetByEmail(string email)
         {
-            var courier = _courierRepository.GetByEmail(email);
+            var courier = await _courierRepository.GetByEmail(email);
             
             if(courier is null)
                 throw new CourierNotFoundException($"Courier not found. Courier email: {email}");
@@ -69,9 +70,9 @@ namespace MailSystem.Services.Services
             return courier;
         }
 
-        private void CheckEmailValidity(Courier existingCourier, string emailToChange)
+        private async Task CheckEmailValidity(Courier existingCourier, string emailToChange)
         {
-            if (existingCourier.Email != emailToChange && _courierRepository.CheckIfEmailAlreadyUsed(emailToChange))
+            if (existingCourier.Email != emailToChange && await _courierRepository.CheckIfEmailAlreadyUsed(emailToChange))
                 throw new CourierEmailAlreadyUsedException($"Courier email already used: {existingCourier.Email}");
         }
         

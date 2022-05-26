@@ -1,10 +1,11 @@
 using System;
+using System.Threading.Tasks;
 using MailSystem.Domain.Models;
 
 namespace MailSystem.Repositories.Interfaces
 {
     public interface IShipmentRepository
     {
-        Guid Create(Shipment shipment);
+        Task<Guid> Create(Shipment shipment);
     }
 }

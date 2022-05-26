@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using MailSystem.Domain.Models;
 using MailSystem.Repositories.Entities;
 using MailSystem.Repositories.Interfaces;
 using NHibernate;
+using NHibernate.Linq;
 
 namespace MailSystem.Repositories.Repositories
 {
@@ -20,36 +22,36 @@ namespace MailSystem.Repositories.Repositories
             _mapper = mapper;
         }
 
-        public IEnumerable<User> GetAll()
+        public async Task<IEnumerable<User>> GetAll()
         {
             using var session = _sessionFactory.OpenSession();
-            var userEntities = session.Query<UserEntity>().ToList();
+            var userEntities = await session.Query<UserEntity>().ToListAsync();
 
             return _mapper.Map<List<User>>(userEntities);
         }
 
-        public Guid Create(User user)
+        public async Task<Guid> Create(User user)
         {
             using var session = _sessionFactory.OpenSession();
             using var transaction = session.BeginTransaction();
 
             var userEntity = _mapper.Map<UserEntity>(user);
-            session.Save(userEntity);
-            transaction.Commit();
+            await session.SaveAsync(userEntity);
+            await transaction.CommitAsync();
 
             return userEntity.Id;
         }
 
-        public User Get(Guid userId)
+        public async Task<User> Get(Guid userId)
         {
             using var session = _sessionFactory.OpenSession();
 
-            var userEntity = session.Get<UserEntity>(userId);
+            var userEntity = await session.GetAsync<UserEntity>(userId);
 
             return _mapper.Map<User>(userEntity);
         }
 
-        public void Update(User user)
+        public async Task Update(User user)
         {
             using var session = _sessionFactory.OpenSession();
             using var transaction = session.BeginTransaction();
@@ -59,11 +61,11 @@ namespace MailSystem.Repositories.Repositories
             userEntity.Phone = user.Phone;
             userEntity.Email = user.Email;
 
-            session.Update(userEntity);
-            transaction.Commit();
+            await session.UpdateAsync(userEntity);
+            await transaction.CommitAsync();
         }
 
-        public void Delete(Guid userId)
+        public async Task Delete(Guid userId)
         {
             using var session = _sessionFactory.OpenSession();
             using var transaction = session.BeginTransaction();
@@ -72,29 +74,29 @@ namespace MailSystem.Repositories.Repositories
             userEntity.Email = Guid.NewGuid().ToString();
             userEntity.Phone = string.Empty;
 
-            session.Delete(userEntity);
-            transaction.Commit();
+            await session.DeleteAsync(userEntity);
+            await transaction.CommitAsync();
         }
 
-        public bool CheckIfEmailAlreadyUsed(string email)
+        public async Task<bool> CheckIfEmailAlreadyUsed(string email)
         {
             using var session = _sessionFactory.OpenSession();
 
-            return session.Query<UserEntity>().Any(x => x.Email == email);
+            return await session.Query<UserEntity>().AnyAsync(x => x.Email == email);
         }
 
-        public bool CheckIfExists(Guid userId)
+        public async Task<bool> CheckIfExists(Guid userId)
         {
             using var session = _sessionFactory.OpenSession();
 
-            return session.Query<UserEntity>().Any(x => x.Id == userId);
+            return await session.Query<UserEntity>().AnyAsync(x => x.Id == userId);
         }
         
-        public User GetByEmail(string email)
+        public async Task<User> GetByEmail(string email)
         {
             using var session = _sessionFactory.OpenSession();
 
-            var userEntity = session.Query<UserEntity>().SingleOrDefault(x => x.Email == email);
+            var userEntity = await session.Query<UserEntity>().SingleOrDefaultAsync(x => x.Email == email);
 
             return _mapper.Map<User>(userEntity);
         }

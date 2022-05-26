@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MailSystem.Domain.Models;
 
 namespace MailSystem.Services.Interfaces
 {
     public interface ICourierService
     {
-        IEnumerable<Courier> GetAll();
+        Task<IEnumerable<Courier>> GetAll();
 
-        Guid Create(Courier courier);
+        Task<Guid> Create(Courier courier);
 
-        Courier Get(Guid courierId);
+        Task<Courier> Get(Guid courierId);
 
-        void Update(Courier courier);
+        Task Update(Courier courier);
 
-        void Delete(Guid guid);
+        Task Delete(Guid guid);
 
-        Courier GetByEmail(string email);
+        Task<Courier> GetByEmail(string email);
     }
 }

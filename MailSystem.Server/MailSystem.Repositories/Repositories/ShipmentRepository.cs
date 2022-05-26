@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using AutoMapper;
 using MailSystem.Domain.Models;
 using MailSystem.Repositories.Entities;
@@ -18,7 +19,7 @@ namespace MailSystem.Repositories.Repositories
             _sessionFactory = sessionFactory;
         }
 
-        public Guid Create(Shipment shipment)
+        public async Task<Guid> Create(Shipment shipment)
         {
             using var session = _sessionFactory.OpenSession();
             using var transaction = session.BeginTransaction();
@@ -28,8 +29,8 @@ namespace MailSystem.Repositories.Repositories
             shipmentEntity.ShipmentSize = new ShipmentSizeEntity {Id = shipment.ShipmentSizeId};
             shipmentEntity.MailBox = new MailboxEntity {Id = shipment.MailBoxId};
 
-            session.Save(shipmentEntity);
-            transaction.Commit();
+            await session.SaveAsync(shipmentEntity);
+            await transaction.CommitAsync();
 
             return shipmentEntity.Id;
         }
