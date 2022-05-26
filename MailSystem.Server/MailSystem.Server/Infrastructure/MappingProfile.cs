@@ -2,6 +2,7 @@
 using MailSystem.Contracts.Authentication;
 using MailSystem.Contracts.Couriers;
 using MailSystem.Contracts.Mailboxes;
+using MailSystem.Contracts.Shipment;
 using MailSystem.Contracts.ShipmentSizes;
 using MailSystem.Contracts.Users;
 using MailSystem.Domain.Models;
@@ -49,6 +50,8 @@ namespace MailSystem.Server.Infrastructure
             CreateMap<ShipmentSize, ShipmentSizeContract>().ReverseMap();
 
             CreateMap<Mailbox, MailboxContract>().ReverseMap();
+
+            CreateMap<Shipment, RegisterShipmentContract>().ReverseMap();
         }
     }
 }

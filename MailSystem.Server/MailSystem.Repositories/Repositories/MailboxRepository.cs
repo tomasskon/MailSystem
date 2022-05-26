@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using MailSystem.Domain.Models;
@@ -25,6 +26,13 @@ namespace MailSystem.Repositories.Repositories
             var mailboxEntities = session.Query<MailboxEntity>().ToList();
 
             return _mapper.Map<List<Mailbox>>(mailboxEntities);
+        }
+
+        public bool CheckIfExists(Guid mailboxId)
+        {
+            using var session = _sessionFactory.OpenSession();
+
+            return session.Query<MailboxEntity>().Any(x => x.Id == mailboxId);
         }
     }
 }
