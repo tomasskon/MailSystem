@@ -6,11 +6,11 @@ namespace MailSystem.Server.Controllers
 {
     [Authorize]
     [Route("[controller]/[action]")]
-    public class ShipmentsController : ControllerBase
+    public class ShipmentEventsController : ControllerBase
     {
         private readonly IMapper _mapper;
         
-        public ShipmentsController(IMapper mapper)
+        public ShipmentEventsController(IMapper mapper)
         {
             _mapper = mapper;
         }

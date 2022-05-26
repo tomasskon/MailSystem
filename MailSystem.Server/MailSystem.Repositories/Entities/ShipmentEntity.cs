@@ -8,6 +8,8 @@ namespace MailSystem.Repositories.Entities
     {
         public virtual Guid Id { get; set; }
         
+        public virtual string TrackingId { get; set; }
+        
         public virtual UserEntity User { get; set; }
         
         public virtual string Description { get; set; }
@@ -28,6 +30,7 @@ namespace MailSystem.Repositories.Entities
         public ShipmentEntityMap()
         {
             Id(x => x.Id).GeneratedBy.Guid();
+            Map(x => x.TrackingId).Length(255).Not.Nullable();
             References(x => x.User).Not.Nullable();
             Map(x => x.Description).Length(150).Nullable();
             Map(x => x.ReceiverFullName).Length(50).Not.Nullable();
