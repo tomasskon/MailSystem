@@ -1,5 +1,7 @@
-﻿@inherits LayoutComponentBase
+﻿@using MailSystem.Http.Exceptions
+@inherits LayoutComponentBase
 @inject IAuthenticationService AuthenticationService
+@inject IStorageService StorageService
 
 <div class="page">
     <div class="sidebar">
@@ -17,9 +19,21 @@
     protected override async Task OnInitializedAsync()
     {
         await AuthenticationService.OnlyAuthenticated();
+        try
+        {
+            await StorageService.UpdateUserInfo();
+        }
+        catch (UnauthorizedException)
+        {
+            await AuthenticationService.Logout();
+        }
+        catch (ServerRequestException)
+        {
+            
+        }
     }
 
-    private async void Logout()
+    private async Task Logout()
     {
         await AuthenticationService.Logout();
     }

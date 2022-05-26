@@ -5,7 +5,6 @@
 
 @inject IAuthenticationService AuthenticationService;
 @inject IAuthenticationHttpClient AuthenticationHttpClient;
-@inject NavigationManager NavigationManager;
 
 <div class="row main-row">
     <div class="col-md-6 d-md-flex d-none" style="background-image: url('https://media.discordapp.net/attachments/777231117320847400/979137727398285393/unknown.png'); background-size: cover; background-position: center"></div>
@@ -14,7 +13,7 @@
             <div class="mb-4">
                 <h1 class="text-center">Prisijungimas</h1>
             </div>
-            @if (!_errorMessage.IsNullOrEmpty())
+            @if (!string.IsNullOrEmpty(_errorMessage))
             {
                 <div class="alert alert-danger mb-2">
                     @_errorMessage
@@ -81,12 +80,12 @@
 
         var emailAddress = contract.GetType().GetProperty("EmailAddress")?.GetValue(contract)?.ToString();
         
-        if (emailAddress.IsNullOrEmpty())
+        if (string.IsNullOrEmpty(emailAddress))
         {
             _errorMessage = "El. pašto adresas negali būti tuščias";
         }
 
-        return _errorMessage.IsNullOrEmpty();
+        return string.IsNullOrEmpty(_errorMessage);
     }
     
     private async Task HandleUserLoginSubmit()

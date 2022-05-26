@@ -1,22 +1,103 @@
 ﻿@page "/"
 @using MailSystem.Contracts.Users
+@using com.google.i18n.phonenumbers
+@using MailSystem.Http.Exceptions
 
+@inject IStorageService StorageService;
+@inject IAuthenticationService AuthenticationService;
 @inject IUserHttpClient UserHttpClient;
 
-@if (_users is not null)
-{
-    foreach (var user in _users)
-    {
-        <h2>User name: @user.FullName</h2>
-    }
-}
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2>Vartotojo informacija</h2>
+                    @if (!string.IsNullOrEmpty(_errorMessage))
+                    {
+                        <div class="alert alert-danger mb-2">
+                            @_errorMessage
+                        </div>
+                    }
+                    <EditForm Model="@_user" OnValidSubmit="HandleEditUser">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary/>
+                        <div class="form-group mb-4">
+                            <label for="fullname">Vardas ir pavardė</label>
+                            <InputText type="text" id="fullname" class="form-control" @bind-Value="@_user.FullName" required/>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="email">El. pašto adresas</label>
+                            <InputText type="email" id="email" class="form-control" @bind-Value="@_user.Email" required/>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="phone">Telefono numeris</label>
+                            <InputText type="text" id="phone" class="form-control" @bind-Value="@_user.Phone" required/>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">Redaguoti duomenis</button>
+                            <button type="button" @onclick="AuthenticationService.Logout" class="btn btn-danger">Atsijungti</button>
+                        </div>
+                    </EditForm>
+                </div>
+                <div class="col-md-6 d-flex justify-content-center align-items-center">
+                    <img src="img/user.png" alt="User image">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
-    private List<UserContract> _users;
+    private UserContract _user = new();
+    private string _errorMessage = "";
+    private readonly PhoneNumberUtil _phoneNumberUtil = PhoneNumberUtil.getInstance();
 
     protected override async Task OnInitializedAsync()
     {
-        // _users = (await UserHttpClient.GetUsers()).ToList();
+        _user = await StorageService.GetUserInfo();
     }
 
+    private bool ValidateForm()
+    {
+        _errorMessage = "";
+        
+        if (string.IsNullOrEmpty(_user.Email))
+        {
+            _errorMessage = "El. pašto adresas negali būti tuščias";
+        }
+        else if (string.IsNullOrEmpty(_user.Phone))
+        {
+            _errorMessage = "Telefono numeris negali būti tuščias";
+        } else if (!_phoneNumberUtil.isPossibleNumber(_user.Phone, "LT"))
+        {
+            _errorMessage = "Telefono numeris nėra teisingas";
+        }
+        else if (string.IsNullOrEmpty(_user.FullName))
+        {
+            _errorMessage = "Vardas ir pavardė privalo būti įvesti";
+        }
+
+        return string.IsNullOrEmpty(_errorMessage);
+    }
+
+    private async Task HandleEditUser()
+    {
+        if (!ValidateForm())
+            return;
+
+        try
+        {
+            await UserHttpClient.UpdateUser(_user);
+            await StorageService.UpdateUserInfo();
+        }
+        catch (ServerRequestException exception)
+        {
+            _errorMessage = exception.ServerExceptionName switch
+            {
+                "UserEmailAlreadyUsedException" => "Šis el. pašto adresas jau naudojamas",
+                _ => exception.ServerExceptionMessage
+            };
+        }
+    }
 }

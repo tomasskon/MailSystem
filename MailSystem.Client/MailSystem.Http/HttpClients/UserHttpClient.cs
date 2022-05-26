@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Net.Http;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using MailSystem.Contracts.Users;
@@ -9,22 +9,35 @@ namespace MailSystem.Http.HttpClients
 {
     public class UserHttpClient : IUserHttpClient
     {
-        private readonly IHttpClientFactory _clientFactory;
+        private readonly IAuthorizedHttpClient _authorizedHttpClient;
 
-        public UserHttpClient(IHttpClientFactory clientFactory)
+        public UserHttpClient(IAuthorizedHttpClient authorizedHttpClient)
         {
-            _clientFactory = clientFactory;
+            _authorizedHttpClient = authorizedHttpClient;
         }
 
         public async Task<IEnumerable<UserContract>> GetUsers()
         {
-            using var client = _clientFactory.CreateClient("Server");
+            using var client = await _authorizedHttpClient.CreateHttpClient();
             var response = await client.GetAsync("Users/GetUsers");
 
-            if (response.IsSuccessStatusCode)
-                return await response.Content.ReadFromJsonAsync<IEnumerable<UserContract>>();
+            return await _authorizedHttpClient.HandleResponse<IEnumerable<UserContract>>(response);
+        }
 
-            return null;
+        public async Task<UserContract> GetUser(Guid userId)
+        {
+            using var client = await _authorizedHttpClient.CreateHttpClient();
+            var response = await client.GetAsync("Users/GetUser?userId=" + userId);
+
+            return await _authorizedHttpClient.HandleResponse<UserContract>(response);
+        }
+
+        public async Task UpdateUser(UserContract user)
+        {
+            using var client = await _authorizedHttpClient.CreateHttpClient();
+            var response = await client.PutAsJsonAsync("Users/UpdateUser", user);
+
+            await _authorizedHttpClient.HandleResponse(response);
         }
     }
 }
