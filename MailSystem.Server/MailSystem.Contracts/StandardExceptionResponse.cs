@@ -4,6 +4,10 @@ namespace MailSystem.Contracts
 {
     public class StandardExceptionResponse
     {
+        public StandardExceptionResponse()
+        {
+        }
+        
         public StandardExceptionResponse(Exception exception)
         {
             Exception = exception.GetType().Name;
