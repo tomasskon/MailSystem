@@ -1,8 +1,8 @@
 using AutoMapper;
 using MailSystem.Contracts;
 using MailSystem.Contracts.Authentication;
-using MailSystem.Domain.Exceptions;
 using MailSystem.Domain.Models;
+using MailSystem.Exception;
 using MailSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

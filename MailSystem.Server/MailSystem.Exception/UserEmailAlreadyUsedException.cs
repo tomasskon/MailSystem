@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace MailSystem.Domain.Exceptions
+﻿namespace MailSystem.Exception
 {
-    public class UserEmailAlreadyUsedException : Exception
+    public class UserEmailAlreadyUsedException : System.Exception
     {
         public UserEmailAlreadyUsedException()
             : base("User not found")
@@ -14,7 +12,7 @@ namespace MailSystem.Domain.Exceptions
         {
         }
 
-        public UserEmailAlreadyUsedException(string message, Exception inner)
+        public UserEmailAlreadyUsedException(string message, System.Exception inner)
             : base(message, inner)
         {
         }

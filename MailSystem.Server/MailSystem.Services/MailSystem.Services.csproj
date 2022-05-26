@@ -6,6 +6,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\MailSystem.Domain\MailSystem.Domain.csproj" />
+      <ProjectReference Include="..\MailSystem.Exception\MailSystem.Exception.csproj" />
       <ProjectReference Include="..\MailSystem.Repositories\MailSystem.Repositories.csproj" />
     </ItemGroup>
 

@@ -1,6 +1,6 @@
 using System;
 using System.Security.Cryptography;
-using MailSystem.Domain.Exceptions;
+using MailSystem.Exception;
 using MailSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 

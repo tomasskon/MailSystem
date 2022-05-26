@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using AutoMapper;
 using MailSystem.Contracts;
 using MailSystem.Contracts.ShipmentEvents;
-using MailSystem.Domain.Exceptions;
+using MailSystem.Exception;
 using MailSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

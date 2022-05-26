@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using MailSystem.Domain.Exceptions;
 using MailSystem.Domain.Models;
+using MailSystem.Exception;
 using MailSystem.Repositories.Interfaces;
 using MailSystem.Services.Interfaces;
 

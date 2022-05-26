@@ -1,8 +1,6 @@
-using System;
-
-namespace MailSystem.Domain.Exceptions
+namespace MailSystem.Exception
 {
-    public class NoShipmentEventsFoundException : Exception
+    public class NoShipmentEventsFoundException : System.Exception
     {
         public NoShipmentEventsFoundException()
             : base("No shipment events found")
@@ -14,7 +12,7 @@ namespace MailSystem.Domain.Exceptions
         {
         }
 
-        public NoShipmentEventsFoundException(string message, Exception inner)
+        public NoShipmentEventsFoundException(string message, System.Exception inner)
             : base(message, inner)
         {
         }

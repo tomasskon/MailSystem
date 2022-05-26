@@ -1,8 +1,6 @@
-using System;
-
-namespace MailSystem.Domain.Exceptions
+namespace MailSystem.Exception
 {
-    public class InvalidPasswordException : Exception
+    public class InvalidPasswordException : System.Exception
     {
         public InvalidPasswordException()
             : base("Incorrect password")
@@ -14,7 +12,7 @@ namespace MailSystem.Domain.Exceptions
         {
         }
 
-        public InvalidPasswordException(string message, Exception inner)
+        public InvalidPasswordException(string message, System.Exception inner)
             : base(message, inner)
         {
         }
