@@ -1,0 +1,15 @@
+﻿@inherits LayoutComponentBase
+
+@inject IAuthenticationService _authenticationService
+
+
+<div class="container-fluid">
+    @Body
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await _authenticationService.OnlyGuest();
+    }
+}

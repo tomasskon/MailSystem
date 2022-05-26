@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using MailSystem.Contracts.User;
+using MailSystem.Contracts.Users;
 
 namespace MailSystem.Http.Interfaces
 {

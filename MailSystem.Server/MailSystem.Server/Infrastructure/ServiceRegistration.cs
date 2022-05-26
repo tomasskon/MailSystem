@@ -14,6 +14,7 @@ namespace MailSystem.Server.Infrastructure
             services.AddSingleton<IPasswordService, PasswordService>();
             services.AddSingleton<ICourierService, CourierService>();
             services.AddSingleton<IShipmentSizeService, ShipmentSizeService>();
+            services.AddSingleton<IMailboxService, MailboxService>();
         }
     }
 }

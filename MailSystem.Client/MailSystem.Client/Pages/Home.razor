@@ -1,14 +1,13 @@
-﻿@page "/Home"
-@using MailSystem.Http.Interfaces
-@using MailSystem.Contracts.User
+﻿@page "/"
+@using MailSystem.Contracts.Users
 
-@inject IUserHttpClient _userHttpClient;
+@inject IUserHttpClient UserHttpClient;
 
 @if (_users is not null)
 {
     foreach (var user in _users)
     {
-        <h2>User name: @user.Name, surname: @user.Surname</h2>
+        <h2>User name: @user.FullName</h2>
     }
 }
 
@@ -17,7 +16,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _users = (await _userHttpClient.GetUsers()).ToList();
+        // _users = (await UserHttpClient.GetUsers()).ToList();
     }
 
 }

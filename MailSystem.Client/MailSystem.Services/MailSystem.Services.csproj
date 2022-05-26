@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MailSystem.Contracts" Version="1.0.2" />
+      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.11" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.18.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\MailSystem.Http\MailSystem.Http.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -1,4 +1,5 @@
-﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+﻿/*@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');*/
+@import url('bootstrap-icons/bootstrap-icons.css');
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -42,9 +43,23 @@ a, .btn-link {
     z-index: 1000;
 }
 
-    #blazor-error-ui .dismiss {
-        cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
-    }
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}
+
+.bi {
+    font-size: 20px;
+    margin: 0 8px 0 50px;
+}
+
+.main-row {
+    max-width: 100%;
+    min-height: 100vh;
+}
+
+.flex-100 {
+    flex: 0 0 100%;
+}

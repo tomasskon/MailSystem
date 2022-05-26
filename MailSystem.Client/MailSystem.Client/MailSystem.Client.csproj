@@ -5,13 +5,19 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="MailSystem.Contracts" Version="1.0.2" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.11" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.11" PrivateAssets="all" />
         <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\MailSystem.Http\MailSystem.Http.csproj" />
+        <ProjectReference Include="..\MailSystem.Http\MailSystem.Http.csproj" />
+        <ProjectReference Include="..\MailSystem.Services\MailSystem.Services.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <_ContentIncludedByDefault Remove="wwwroot\sample-data\weather.json" />
     </ItemGroup>
 
 </Project>
