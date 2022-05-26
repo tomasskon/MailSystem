@@ -1,8 +1,6 @@
-using System;
-
-namespace MailSystem.Domain.Exceptions
+namespace MailSystem.Exception
 {
-    public class ShipmentSizeNotFoundException : Exception
+    public class ShipmentSizeNotFoundException : System.Exception
     {
         public ShipmentSizeNotFoundException()
             : base("Shipment size not found")
@@ -14,7 +12,7 @@ namespace MailSystem.Domain.Exceptions
         {
         }
 
-        public ShipmentSizeNotFoundException(string message, Exception inner)
+        public ShipmentSizeNotFoundException(string message, System.Exception inner)
             : base(message, inner)
         {
         }

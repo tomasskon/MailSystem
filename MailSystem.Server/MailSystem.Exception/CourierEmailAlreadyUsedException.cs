@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace MailSystem.Domain.Exceptions
+﻿namespace MailSystem.Exception
 {
-    public class CourierEmailAlreadyUsedException : Exception
+    public class CourierEmailAlreadyUsedException : System.Exception
     {
         public CourierEmailAlreadyUsedException()
             : base("Courier not found")
@@ -14,7 +12,7 @@ namespace MailSystem.Domain.Exceptions
         {
         }
 
-        public CourierEmailAlreadyUsedException(string message, Exception inner)
+        public CourierEmailAlreadyUsedException(string message, System.Exception inner)
             : base(message, inner)
         {
         }

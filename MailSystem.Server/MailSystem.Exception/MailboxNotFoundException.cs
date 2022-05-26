@@ -1,8 +1,6 @@
-using System;
-
-namespace MailSystem.Domain.Exceptions
+namespace MailSystem.Exception
 {
-    public class MailboxNotFoundException : Exception
+    public class MailboxNotFoundException : System.Exception
     {
         public MailboxNotFoundException()
             : base("Mailbox not found")
@@ -14,7 +12,7 @@ namespace MailSystem.Domain.Exceptions
         {
         }
 
-        public MailboxNotFoundException(string message, Exception inner)
+        public MailboxNotFoundException(string message, System.Exception inner)
             : base(message, inner)
         {
         }

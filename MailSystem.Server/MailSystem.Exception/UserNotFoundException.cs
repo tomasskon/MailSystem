@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace MailSystem.Domain.Exceptions
+﻿namespace MailSystem.Exception
 {
-    public class UserNotFoundException : Exception
+    public class UserNotFoundException : System.Exception
     {
         public UserNotFoundException()
             : base("User not found")
@@ -14,7 +12,7 @@ namespace MailSystem.Domain.Exceptions
         {
         }
 
-        public UserNotFoundException(string message, Exception inner)
+        public UserNotFoundException(string message, System.Exception inner)
             : base(message, inner)
         {
         }

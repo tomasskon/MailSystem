@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace MailSystem.Domain.Exceptions
+﻿namespace MailSystem.Exception
 {
-    public class CourierNotFoundException : Exception
+    public class CourierNotFoundException : System.Exception
     {
         public CourierNotFoundException()
             : base("Courier not found")
@@ -14,7 +12,7 @@ namespace MailSystem.Domain.Exceptions
         {
         }
 
-        public CourierNotFoundException(string message, Exception inner)
+        public CourierNotFoundException(string message, System.Exception inner)
             : base(message, inner)
         {
         }
