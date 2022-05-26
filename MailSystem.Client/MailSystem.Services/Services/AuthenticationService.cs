@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using MailSystem.Contracts.Enums;
+using MailSystem.Http.Interfaces;
 using MailSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 
@@ -43,6 +44,10 @@ namespace MailSystem.Services.Services
         public async Task Login(string jwtToken)
         {
             await _storageService.SetJwtToken(jwtToken);
+
+            if (await _storageService.GetUserType() == UserType.User)
+                await _storageService.UpdateUserInfo();
+
             _navigationManager.NavigateTo("/");
         }
 

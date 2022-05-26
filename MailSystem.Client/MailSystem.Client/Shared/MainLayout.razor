@@ -21,7 +21,8 @@
         await AuthenticationService.OnlyAuthenticated();
         try
         {
-            await StorageService.UpdateUserInfo();
+            if (await StorageService.GetUserInfo() == null)
+                await StorageService.UpdateUserInfo();
         }
         catch (UnauthorizedException)
         {
@@ -31,10 +32,5 @@
         {
             
         }
-    }
-
-    private async Task Logout()
-    {
-        await AuthenticationService.Logout();
     }
 }

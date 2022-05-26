@@ -2,7 +2,7 @@ using System;
 
 namespace MailSystem.Http.Exceptions
 {
-    public class ServerRequestException : Exception
+    public class ServerRequestException : System.Exception
     {
         public string ServerExceptionName { get; set; }
         public string ServerExceptionMessage { get; set; }
@@ -19,7 +19,7 @@ namespace MailSystem.Http.Exceptions
         {
         }
         
-        public ServerRequestException(string message, Exception inner)
+        public ServerRequestException(string message, System.Exception inner)
             : base(message, inner)
         {
         }

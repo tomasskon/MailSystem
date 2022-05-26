@@ -1,10 +1,13 @@
 ﻿@page "/login"
 @using Microsoft.IdentityModel.Tokens
 @using MailSystem.Http.Exceptions
+@using MailSystem.Exception
 @layout AuthLayout
 
 @inject IAuthenticationService AuthenticationService;
 @inject IAuthenticationHttpClient AuthenticationHttpClient;
+@inject IStorageService StorageService;
+@inject IUserHttpClient UserHttpClient;
 
 <div class="row main-row">
     <div class="col-md-6 d-md-flex d-none" style="background-image: url('https://media.discordapp.net/attachments/777231117320847400/979137727398285393/unknown.png'); background-size: cover; background-position: center"></div>
@@ -102,8 +105,8 @@
         {
             _errorMessage = exception.ServerExceptionName switch
             {
-                "UserNotFoundException" => "Vartotojas nerastas",
-                "InvalidPasswordException" => "Slaptažodis netinka",
+                nameof(UserNotFoundException) => "Vartotojas nerastas",
+                nameof(InvalidPasswordException) => "Slaptažodis netinka",
                 _ => exception.ServerExceptionMessage
             };
         }
@@ -123,8 +126,8 @@
         {
             _errorMessage = exception.ServerExceptionName switch
             {
-                "CourierNotFoundException" => "Vartotojas nerastas",
-                "InvalidPasswordException" => "Slaptažodis netinka",
+                nameof(CourierNotFoundException) => "Vartotojas nerastas",
+                nameof(InvalidPasswordException) => "Slaptažodis netinka",
                 _ => exception.ServerExceptionMessage
             };
         }
