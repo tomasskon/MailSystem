@@ -1,4 +1,5 @@
-﻿using MailSystem.Repositories.Interfaces;
+﻿using MailSystem.Repositories.Entities;
+using MailSystem.Repositories.Interfaces;
 using MailSystem.Repositories.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,6 +16,7 @@ namespace MailSystem.Server.Infrastructure
             services.AddSingleton<IShipmentSizeRepository, ShipmentSizeRepository>();
             services.AddSingleton<IMailboxRepository, MailboxRepository>();
             services.AddSingleton<IShipmentRepository, ShipmentRepository>();
+            services.AddSingleton<IShipmentEventRepository, ShipmentEventRepository>();
         }
     }
 }
