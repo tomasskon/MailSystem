@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using MailSystem.Domain.Models;
@@ -25,6 +26,13 @@ namespace MailSystem.Repositories.Repositories
             var shipmentSizeEntities = session.Query<ShipmentSizeEntity>().ToList();
 
             return _mapper.Map<List<ShipmentSize>>(shipmentSizeEntities);
+        }
+        
+        public bool CheckIfExists(Guid shipmentSizeId)
+        {
+            using var session = _sessionFactory.OpenSession();
+
+            return session.Query<ShipmentSizeEntity>().Any(x => x.Id == shipmentSizeId);
         }
     }
 }

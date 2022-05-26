@@ -74,5 +74,11 @@ namespace MailSystem.Services.Services
 
             return user;
         }
+
+        public void CheckIfUserExists(Guid userId)
+        {
+            if (!_userRepository.CheckIfExists(userId))
+                throw new UserNotFoundException($"User not found: {userId}");
+        }
     }
 }

@@ -10,6 +10,8 @@ namespace MailSystem.Repositories.Entities
     {
         public virtual Guid Id { get; set; }
         
+        public virtual string TrackingId { get; set; }
+        
         public virtual MailboxEntity CurrentLocation { get; set; }
         
         public virtual DateTime EventDate { get; set; }
@@ -22,6 +24,7 @@ namespace MailSystem.Repositories.Entities
         public ShipmentEventMap()
         {
             Id(x => x.Id).GeneratedBy.Guid();
+            Map(x => x.TrackingId).Length(255).Not.Nullable();
             References(x => x.CurrentLocation).Nullable();
             Map(x => x.EventDate).CustomType<UtcDateTimeType>().Not.Nullable();
             Map(x => x.ShipmentStatus).CustomType<ShipmentStatus>().Not.Nullable();

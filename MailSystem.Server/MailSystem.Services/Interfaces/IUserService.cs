@@ -17,5 +17,7 @@ namespace MailSystem.Services.Interfaces
         void Delete(Guid userId);
 
         User GetByEmail(string email);
+
+        void CheckIfUserExists(Guid userId);
     }
 }
