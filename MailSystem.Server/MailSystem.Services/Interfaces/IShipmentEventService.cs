@@ -9,6 +9,6 @@ namespace MailSystem.Services.Interfaces
     {
         List<DetailedShipmentEvent> GetAllByTrackingId(string trackingId);
 
-        void CreateShipmentEvent(Guid mailboxId, ShipmentStatus shipmentStatus, string trackingId);
+        void CreateShipmentEvent(Guid? mailboxId, ShipmentStatus shipmentStatus, string trackingId);
     }
 }

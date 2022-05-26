@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using AutoMapper;
 using MailSystem.Contracts;
 using MailSystem.Contracts.ShipmentEvents;
+using MailSystem.Domain.Enums;
 using MailSystem.Exception;
 using MailSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -37,6 +38,17 @@ namespace MailSystem.Server.Controllers
             {
                 return NotFound(new StandardExceptionResponse(ex));
             }
+        }
+        
+        [HttpPost]
+        public IActionResult UpdateShipmentStatus([FromBody]UpdateShipmentStatusContract updateShipmentStatusContract)
+        {
+            _shipmentEventService.CreateShipmentEvent(
+                updateShipmentStatusContract.MailboxId,
+                (ShipmentStatus)(updateShipmentStatusContract.ShipmentStatus), 
+                updateShipmentStatusContract.TrackingId);
+
+            return Ok();
         }
     }
 }
