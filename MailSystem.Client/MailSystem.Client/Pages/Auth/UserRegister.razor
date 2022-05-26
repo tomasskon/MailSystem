@@ -1,0 +1,112 @@
+﻿@page "/user-register"
+@layout AuthLayout
+@using Microsoft.IdentityModel.Tokens
+@using MailSystem.Http.Exceptions
+
+@inject IAuthenticationHttpClient AuthenticationHttpClient;
+@inject IAuthenticationService AuthenticationService;
+
+<div class="row main-row">
+    <div class="col-md-6 d-md-flex d-none" style="background-image: url('https://media.discordapp.net/attachments/777231117320847400/979137727398285393/unknown.png'); background-size: cover; background-position: center"></div>
+    <div class="col-md-6 d-flex align-items-center">
+        <div class="p-2 p-md-5 flex-100">
+            <div class="mb-4">
+                <h1 class="text-center">Vartotojo registracija</h1>
+            </div>
+            @if (!_errorMessage.IsNullOrEmpty())
+            {
+                <div class="alert alert-danger mb-2">
+                    @_errorMessage
+                </div>
+            }
+            <div class="card mb-4">
+                <div class="card-body">
+                    <EditForm Model="@_userRegisterContract" OnValidSubmit="@HandleUserRegisterSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary/>
+                        <div class="form-group">
+                            <label for="fullname">Vardas ir pavardė</label>
+                            <InputText id="fullname" class="form-control" @bind-Value="@_userRegisterContract.FullName" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">El. pašto adresas</label>
+                            <InputText type="email" id="email" class="form-control" @bind-Value="@_userRegisterContract.Email" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone-number">Telefono numeris</label>
+                            <InputText id="phone-number" class="form-control" @bind-Value="@_userRegisterContract.Phone" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Slaptažodis</label>
+                            <InputText type="password" id="password" class="form-control" @bind-Value="@_userRegisterContract.Password" required/>
+                        </div>
+                        <div class="form-group">
+                            <label for="password_confirm">Pakartoti slaptažodį</label>
+                            <InputText type="password" id="password_confirm" class="form-control" @bind-Value="@_passwordConfirmation" required/>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Registruotis</button>
+                        </div>
+                    </EditForm>
+                    <div>
+                        <a href="login">Prisijungimas</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private readonly UserRegisterContract _userRegisterContract = new();
+    private string _passwordConfirmation;
+    private string _errorMessage = "";
+
+    private bool ValidateFields()
+    {
+        _errorMessage = "";
+
+        if (_userRegisterContract.Password != _passwordConfirmation)
+        {
+            _errorMessage = "Slaptažodžiai nesutampa";
+        } 
+        else if (_userRegisterContract.FullName.IsNullOrEmpty())
+        {
+            _errorMessage = "Vardas ir pavardė yra privalomas laukelis";
+        }
+        else if (_userRegisterContract.Email.IsNullOrEmpty())
+        {
+            _errorMessage = "El. pašto adresas negali būti tuščias";
+        }
+        else if (_userRegisterContract.Phone.IsNullOrEmpty())
+        {
+            _errorMessage = "Telefono numeris negali būti tuščias";
+        }
+        else if (_userRegisterContract.Password.IsNullOrEmpty())
+        {
+            _errorMessage = "Slaptažodis negali būti tuščias";
+        }
+
+        return _errorMessage.IsNullOrEmpty();
+    }
+    
+    private async Task HandleUserRegisterSubmit()
+    {
+        if (!ValidateFields()) 
+            return;
+
+        try
+        {
+            var jwtToken = await AuthenticationHttpClient.UserRegister(_userRegisterContract);
+            await AuthenticationService.Login(jwtToken);
+        }
+        catch (ServerRequestException exception)
+        {
+            _errorMessage = exception.ServerExceptionName switch
+            {
+                "UserEmailAlreadyUsedException" => "Šis el. pašto adresas jau naudojamas",
+                _ => exception.ServerExceptionMessage
+            };
+        }
+    }
+}

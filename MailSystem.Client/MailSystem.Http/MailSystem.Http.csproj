@@ -5,10 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\MailSystem.Contracts\MailSystem.Contracts.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
+      <PackageReference Include="MailSystem.Contracts" Version="1.0.2" />
       <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
     </ItemGroup>
 
