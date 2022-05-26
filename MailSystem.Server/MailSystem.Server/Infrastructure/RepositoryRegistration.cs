@@ -12,6 +12,7 @@ namespace MailSystem.Server.Infrastructure
             services.AddSingleton<ICourierRepository, CourierRepository>();
             services.AddSingleton<IUserPasswordRepository, UserPasswordRepository>();
             services.AddSingleton<ICourierPasswordRepository, CourierPasswordRepository>();
+            services.AddSingleton<IShipmentSizeRepository, ShipmentSizeRepository>();
         }
     }
 }
