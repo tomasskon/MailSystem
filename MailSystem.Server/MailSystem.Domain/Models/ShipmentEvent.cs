@@ -9,7 +9,7 @@ namespace MailSystem.Domain.Models
         
         public string TrackingId { get; set; }
         
-        public Guid MailboxId { get; set; }
+        public Guid? MailboxId { get; set; }
         
         public DateTime EventDate { get; set; }
         

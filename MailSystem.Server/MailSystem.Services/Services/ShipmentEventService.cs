@@ -27,7 +27,7 @@ namespace MailSystem.Services.Services
             return shipmentEvents;
         }
 
-        public void CreateShipmentEvent(Guid mailboxId, ShipmentStatus shipmentStatus, string trackingId)
+        public void CreateShipmentEvent(Guid? mailboxId, ShipmentStatus shipmentStatus, string trackingId)
         {
             var shipment = new ShipmentEvent {MailboxId = mailboxId, ShipmentStatus = shipmentStatus, TrackingId = trackingId};
 

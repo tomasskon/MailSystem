@@ -36,7 +36,7 @@ namespace MailSystem.Repositories.Repositories
             using var transaction = session.BeginTransaction();
 
             var shipmentEventEntity = _mapper.Map<ShipmentEventEntity>(shipmentEvent);
-            shipmentEventEntity.Mailbox = new MailboxEntity {Id = shipmentEvent.MailboxId};
+            shipmentEventEntity.Mailbox = shipmentEvent.MailboxId.HasValue ? new MailboxEntity {Id = shipmentEvent.MailboxId.Value} : null;
             shipmentEventEntity.EventDate = DateTime.UtcNow;
             session.Save(shipmentEventEntity);
             
