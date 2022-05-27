@@ -28,9 +28,9 @@ namespace MailSystem.Services.Services
             return shipmentEvents;
         }
 
-        public async Task CreateShipmentEvent(Guid? mailboxId, ShipmentStatus shipmentStatus, string trackingId)
+        public async Task CreateShipmentEvent(Guid shipmentId, Guid? mailboxId, ShipmentStatus shipmentStatus)
         {
-            var shipment = new ShipmentEvent {MailboxId = mailboxId, ShipmentStatus = shipmentStatus, TrackingId = trackingId};
+            var shipment = new ShipmentEvent {MailboxId = mailboxId, ShipmentStatus = shipmentStatus, ShipmentId = shipmentId};
 
             await _shipmentEventRepository.Create(shipment);
         }

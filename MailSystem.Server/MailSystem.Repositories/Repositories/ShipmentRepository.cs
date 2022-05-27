@@ -1,10 +1,14 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using FluentNHibernate.Testing.Values;
 using MailSystem.Domain.Models;
 using MailSystem.Repositories.Entities;
 using MailSystem.Repositories.Interfaces;
 using NHibernate;
+using NHibernate.Linq;
 
 namespace MailSystem.Repositories.Repositories
 {
@@ -17,6 +21,16 @@ namespace MailSystem.Repositories.Repositories
         {
             _mapper = mapper;
             _sessionFactory = sessionFactory;
+        }
+
+        public async Task<List<DetailedShipment>> GetUserShipments(Guid userId)
+        {
+            using var session = _sessionFactory.OpenSession();
+
+            var shipmentEntities =
+                await session.Query<ShipmentEntity>().Where(x => x.User.Id == userId).ToListAsync();
+
+            return _mapper.Map<List<DetailedShipment>>(shipmentEntities);
         }
 
         public async Task<Guid> Create(Shipment shipment)

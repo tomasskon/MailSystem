@@ -10,6 +10,6 @@ namespace MailSystem.Services.Interfaces
     {
         Task<List<DetailedShipmentEvent>> GetAllByTrackingId(string trackingId);
 
-        Task CreateShipmentEvent(Guid? mailboxId, ShipmentStatus shipmentStatus, string trackingId);
+        Task CreateShipmentEvent(Guid shipmentId, Guid? mailboxId, ShipmentStatus shipmentStatus);
     }
 }

@@ -8,8 +8,6 @@ namespace MailSystem.Contracts.ShipmentEvents
     {
         public Guid Id { get; set; }
         
-        public string TrackingId { get; set; }
-        
         public MailboxContract Mailbox { get; set; }
         
         public DateTime EventDate { get; set; }

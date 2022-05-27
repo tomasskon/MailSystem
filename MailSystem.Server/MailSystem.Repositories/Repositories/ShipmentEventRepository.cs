@@ -27,7 +27,7 @@ namespace MailSystem.Repositories.Repositories
             using var session = _sessionFactory.OpenSession();
 
             var shipmentEventEntities =
-                await session.Query<ShipmentEventEntity>().Where(x => x.TrackingId == trackingId).ToListAsync();
+                await session.Query<ShipmentEventEntity>().Where(x => x.Shipment.TrackingId == trackingId).ToListAsync();
 
             return _mapper.Map<List<DetailedShipmentEvent>>(shipmentEventEntities);
         }
@@ -38,6 +38,7 @@ namespace MailSystem.Repositories.Repositories
             using var transaction = session.BeginTransaction();
 
             var shipmentEventEntity = _mapper.Map<ShipmentEventEntity>(shipmentEvent);
+            shipmentEventEntity.Shipment = new ShipmentEntity {Id = shipmentEvent.ShipmentId};
             shipmentEventEntity.Mailbox = shipmentEvent.MailboxId.HasValue ? new MailboxEntity {Id = shipmentEvent.MailboxId.Value} : null;
             shipmentEventEntity.EventDate = DateTime.UtcNow;
             await session.SaveAsync(shipmentEventEntity);

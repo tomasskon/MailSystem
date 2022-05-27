@@ -32,6 +32,7 @@ namespace MailSystem.Server.Infrastructure
             CreateMap<Mailbox, MailboxEntity>().ReverseMap();
 
             CreateMap<Shipment, ShipmentEntity>().ReverseMap();
+            CreateMap<DetailedShipment, ShipmentEntity>().ReverseMap();
             CreateMap<ShipmentEvent, ShipmentEventEntity>().ReverseMap();
             CreateMap<DetailedShipmentEvent, ShipmentEventEntity>().ReverseMap();
         }
@@ -50,6 +51,9 @@ namespace MailSystem.Server.Infrastructure
 
             CreateMap<ShipmentSize, ShipmentSizeContract>().ReverseMap();
             CreateMap<Shipment, RegisterShipmentContract>().ReverseMap();
+            // CreateMap<Shipment, ShipmentContract>().ReverseMap();
+            CreateMap<DetailedShipment, ShipmentContract>().ReverseMap();
+            CreateMap<DetailedShipment, DetailedShipmentContract>().ReverseMap();
             CreateMap<DetailedShipmentEvent, DetailedShipmentEventContract>().ReverseMap();
                 
             CreateMap<Mailbox, MailboxContract>().ReverseMap();

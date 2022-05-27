@@ -2,12 +2,10 @@ using System;
 
 namespace MailSystem.Domain.Models
 {
-    public class Shipment
+    public class DetailedShipment
     {
         public Guid Id { get; set; }
-        
-        public Guid UserId { get; set; }
-        
+
         public string TrackingId { get; set; }
         
         public string Description { get; set; }
@@ -18,8 +16,8 @@ namespace MailSystem.Domain.Models
         
         public string ReceiverPhoneNumber { get; set; }
         
-        public Guid MailBoxId { get; set; }
+        public Mailbox MailBox { get; set; }
         
-        public Guid ShipmentSizeId { get; set; }
+        public ShipmentSize ShipmentSize { get; set; }
     }
 }
