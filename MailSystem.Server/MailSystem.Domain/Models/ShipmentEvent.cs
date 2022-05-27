@@ -6,9 +6,8 @@ namespace MailSystem.Domain.Models
     public class ShipmentEvent
     {
         public Guid Id { get; set; }
-        
-        public string TrackingId { get; set; }
-        
+
+        public Guid ShipmentId { get; set; }
         public Guid? MailboxId { get; set; }
         
         public DateTime EventDate { get; set; }

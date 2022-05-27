@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using MailSystem.Domain.Models;
@@ -13,28 +12,25 @@ namespace MailSystem.Repositories.Repositories
 {
     public class ShipmentSizeRepository : IShipmentSizeRepository
     {
-        private readonly ISessionFactory _sessionFactory;
+        private readonly ISession _session;
         private readonly IMapper _mapper;
 
-        public ShipmentSizeRepository(ISessionFactory sessionFactory, IMapper mapper)
+        public ShipmentSizeRepository(ISession session, IMapper mapper)
         {
-            _sessionFactory = sessionFactory;
+            _session = session;
             _mapper = mapper;
         }
 
         public async Task<IEnumerable<ShipmentSize>> GetAll()
         {
-            using var session = _sessionFactory.OpenSession();
-            var shipmentSizeEntities = await session.Query<ShipmentSizeEntity>().ToListAsync();
+            var shipmentSizeEntities = await _session.Query<ShipmentSizeEntity>().ToListAsync();
 
             return _mapper.Map<List<ShipmentSize>>(shipmentSizeEntities);
         }
         
         public Task<bool> CheckIfExists(Guid shipmentSizeId)
         {
-            using var session = _sessionFactory.OpenSession();
-
-            return session.Query<ShipmentSizeEntity>().AnyAsync(x => x.Id == shipmentSizeId);
+            return _session.Query<ShipmentSizeEntity>().AnyAsync(x => x.Id == shipmentSizeId);
         }
     }
 }

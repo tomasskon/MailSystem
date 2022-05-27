@@ -9,14 +9,14 @@ namespace MailSystem.Server.Infrastructure
     {
         public static void RegisterRepositories(this IServiceCollection services)
         {
-            services.AddSingleton<IUserRepository, UserRepository>();
-            services.AddSingleton<ICourierRepository, CourierRepository>();
-            services.AddSingleton<IUserPasswordRepository, UserPasswordRepository>();
-            services.AddSingleton<ICourierPasswordRepository, CourierPasswordRepository>();
-            services.AddSingleton<IShipmentSizeRepository, ShipmentSizeRepository>();
-            services.AddSingleton<IMailboxRepository, MailboxRepository>();
-            services.AddSingleton<IShipmentRepository, ShipmentRepository>();
-            services.AddSingleton<IShipmentEventRepository, ShipmentEventRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ICourierRepository, CourierRepository>();
+            services.AddScoped<IUserPasswordRepository, UserPasswordRepository>();
+            services.AddScoped<ICourierPasswordRepository, CourierPasswordRepository>();
+            services.AddScoped<IShipmentSizeRepository, ShipmentSizeRepository>();
+            services.AddScoped<IMailboxRepository, MailboxRepository>();
+            services.AddScoped<IShipmentRepository, ShipmentRepository>();
+            services.AddScoped<IShipmentEventRepository, ShipmentEventRepository>();
         }
     }
 }

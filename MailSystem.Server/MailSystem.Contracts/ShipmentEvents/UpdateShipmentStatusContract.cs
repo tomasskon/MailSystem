@@ -5,7 +5,7 @@ namespace MailSystem.Contracts.ShipmentEvents
 {
     public class UpdateShipmentStatusContract
     {
-        public string TrackingId { get; set; }
+        public Guid ShipmentId { get; set; }
         
         public ShipmentStatus ShipmentStatus { get; set; }
         

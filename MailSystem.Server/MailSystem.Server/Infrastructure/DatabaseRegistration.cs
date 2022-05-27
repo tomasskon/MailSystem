@@ -1,4 +1,5 @@
-﻿using FluentNHibernate.Cfg;
+﻿using System.Linq;
+using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using MailSystem.Repositories.Entities;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +27,13 @@ namespace MailSystem.Server.Infrastructure
                 .Mappings(m => m.FluentMappings.AddFromAssemblyOf<UserEntityMap>())
                 .ExposeConfiguration(c => new SchemaUpdate(c).Execute(false, true))
                 .BuildSessionFactory());
+            
+            services.AddScoped(factory =>
+                factory
+                    .GetServices<NHibernate.ISessionFactory>()
+                    .First()
+                    .OpenSession()
+            );
         }
     }
 }

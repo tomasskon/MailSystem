@@ -1,0 +1,84 @@
+@page "/my-shipments"
+@using MailSystem.Exception
+@using MailSystem.Http.Exceptions
+@using MailSystem.Contracts.Shipment
+@using Microsoft.IdentityModel.Tokens
+
+@inject IShipmentHttpClient ShipmentHttpClient;
+@inject IStorageService StorageService;
+
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="mb-5">Mano siuntos</h2>
+            @if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                <div class="alert alert-danger mb-2">
+                    @_errorMessage
+                </div>
+            }
+            <div class="row">
+                @if (!_shipmentList.IsNullOrEmpty())
+                {
+                    <div class="col-md-8 offset-md-2">
+                        <table class="table custom-table">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th>Siuntos nr.</th>
+                                <th>Dydis</th>
+                                <th>Gavėjas</th>
+                                <th>Pristatymo vieta</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var shipment in _shipmentList)
+                            {
+                                <tr>
+                                    <td>@shipment.TrackingId</td>
+                                    <td>@shipment.ShipmentSize.Name</td>
+                                    <td>@shipment.ReceiverFullName</td>
+                                    <td>@shipment.Mailbox.Location</td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div>Loading...</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string _errorMessage = "";
+    private IEnumerable<DetailedShipmentContract> _shipmentList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var userId = await StorageService.GetUserId();
+            if (userId.HasValue)
+            {
+                _shipmentList = await ShipmentHttpClient.GetUserShipments(userId.Value);
+            }
+            else
+            {
+                _errorMessage = "Nepavyko jūsų identifikuoti";
+            }
+        }
+        catch (ServerRequestException exception)
+        {
+            _errorMessage = exception.ServerExceptionName switch 
+            {
+                nameof(NoShipmentEventsFoundException) => "Nepavyko rasti siuntos",
+                _ => exception.ServerExceptionMessage
+                };
+        }
+    }
+
+}

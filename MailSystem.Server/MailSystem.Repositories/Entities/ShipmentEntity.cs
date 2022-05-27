@@ -10,6 +10,8 @@ namespace MailSystem.Repositories.Entities
 
         public virtual UserEntity User { get; set; }
         
+        public virtual string TrackingId { get; set; }
+        
         public virtual string Description { get; set; }
         
         public virtual string ReceiverFullName { get; set; }
@@ -29,6 +31,7 @@ namespace MailSystem.Repositories.Entities
         {
             Id(x => x.Id).GeneratedBy.Guid();
             References(x => x.User).Not.Nullable();
+            Map(x => x.TrackingId).Length(255).Not.Nullable();
             Map(x => x.Description).Length(150).Nullable();
             Map(x => x.ReceiverFullName).Length(50).Not.Nullable();
             Map(x => x.ReceiverEmail).Length(50).Not.Nullable();

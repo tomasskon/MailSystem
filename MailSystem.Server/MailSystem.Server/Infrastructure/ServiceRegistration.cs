@@ -8,15 +8,15 @@ namespace MailSystem.Server.Infrastructure
     {
         public static void RegisterServices(this IServiceCollection services)
         {
-            services.AddSingleton<IUserService, UserService>();
-            services.AddSingleton<ITokenService, TokenService>();
-            services.AddSingleton<IAuthenticationService, AuthenticationService>();
-            services.AddSingleton<IPasswordService, PasswordService>();
-            services.AddSingleton<ICourierService, CourierService>();
-            services.AddSingleton<IShipmentSizeService, ShipmentSizeService>();
-            services.AddSingleton<IMailboxService, MailboxService>();
-            services.AddSingleton<IShipmentService, ShipmentService>();
-            services.AddSingleton<IShipmentEventService, ShipmentEventService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IPasswordService, PasswordService>();
+            services.AddScoped<ICourierService, CourierService>();
+            services.AddScoped<IShipmentSizeService, ShipmentSizeService>();
+            services.AddScoped<IMailboxService, MailboxService>();
+            services.AddScoped<IShipmentService, ShipmentService>();
+            services.AddScoped<IShipmentEventService, ShipmentEventService>();
         }
     }
 }

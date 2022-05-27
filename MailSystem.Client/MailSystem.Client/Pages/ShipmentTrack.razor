@@ -1,0 +1,106 @@
+@page "/track-shipment"
+@using Microsoft.AspNetCore.WebUtilities
+@using MailSystem.Contracts.ShipmentEvents
+@using MailSystem.Exception
+@using MailSystem.Http.Exceptions
+@using Microsoft.IdentityModel.Tokens
+
+@inject NavigationManager NavigationManager;
+@inject IShipmentEventHttpClient ShipmentEventHttpClient;
+
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="mb-5">Sekti siuntą</h2>
+            @if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                <div class="alert alert-danger mb-2">
+                    @_errorMessage
+                </div>
+            }
+            <div class="row">
+                <div class="col-md-8 offset-md-2 mb-5">
+                    <div class="form-group mb-2">
+                        <label for="tracking-number">Siuntos numeris</label>
+                        <input type="text" id="tracking-number" class="form-control" @bind="_trackingNumber">
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-primary" @onclick="SubmitTrackingNumber">Ieškoti</button>
+                    </div>
+                </div>
+                @if (!_shipmentEventList.IsNullOrEmpty())
+                {
+                    <div class="col-md-8 offset-md-2">
+                        <table class="table custom-table">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th>Įvykis</th>
+                                <th>Data</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var eventData in _shipmentEventList)
+                            {
+                                <tr>
+                                    <td>@eventData.ShipmentStatus</td>
+                                    <td>@eventData.EventDate</td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-10 offset-md-1">
+                        <img src="img/truck-2.png" alt="Truck image" class="w-100 mb-4">
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string _trackingNumber = "";
+    private string _errorMessage = "";
+    private IEnumerable<DetailedShipmentEventContract> _shipmentEventList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var absoluteUri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        if (QueryHelpers.ParseQuery(absoluteUri.Query).TryGetValue("trackingNumber", out var number))
+        {
+            _trackingNumber = number.ToString();
+            await SubmitTrackingNumber();
+        }
+    }
+
+    private async Task SubmitTrackingNumber()
+    {
+        _errorMessage = "";
+
+        if (string.IsNullOrEmpty(_trackingNumber))
+        {
+            _errorMessage = "Įveskite siuntos numerį";
+            return;
+        }
+
+        try
+        {
+            _shipmentEventList = await ShipmentEventHttpClient.GetEventsByTrackingId(_trackingNumber);
+            if (_shipmentEventList.IsNullOrEmpty())
+            {
+                _errorMessage = "Nepavyko rasti siuntos";
+            }
+        }
+        catch (ServerRequestException exception)
+        {
+            _errorMessage = exception.ServerExceptionName switch 
+            {
+                nameof(NoShipmentEventsFoundException) => "Nepavyko rasti siuntos",
+                _ => exception.ServerExceptionMessage
+            };
+        }
+    }
+}

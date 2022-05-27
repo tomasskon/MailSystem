@@ -30,7 +30,7 @@ namespace MailSystem.Server.Controllers
         {
             try
             {
-                var shipmentEvents =await _shipmentEventService.GetAllByTrackingId(trackingId);
+                var shipmentEvents = await _shipmentEventService.GetAllByTrackingId(trackingId);
 
                 return Ok(_mapper.Map<List<DetailedShipmentEventContract>>(shipmentEvents));
             }
@@ -44,9 +44,9 @@ namespace MailSystem.Server.Controllers
         public async Task<IActionResult> UpdateShipmentStatus([FromBody]UpdateShipmentStatusContract updateShipmentStatusContract)
         {
             await _shipmentEventService.CreateShipmentEvent(
+                updateShipmentStatusContract.ShipmentId,
                 updateShipmentStatusContract.MailboxId,
-                (ShipmentStatus)(updateShipmentStatusContract.ShipmentStatus), 
-                updateShipmentStatusContract.TrackingId);
+                (ShipmentStatus)(updateShipmentStatusContract.ShipmentStatus));
 
             return Ok();
         }
