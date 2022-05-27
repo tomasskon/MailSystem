@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using MailSystem.Contracts.Shipment;
@@ -12,6 +14,14 @@ namespace MailSystem.Http.HttpClients
         public ShipmentHttpClient(IAuthorizedHttpClient authorizedHttpClient)
         {
             _authorizedHttpClient = authorizedHttpClient;
+        }
+
+        public async Task<IEnumerable<DetailedShipmentContract>> GetUserShipments(Guid userId)
+        {
+            using var client = await _authorizedHttpClient.CreateHttpClient();
+            var response = await client.GetAsync("Shipments/GetUserShipments?userId=" + userId);
+
+            return await _authorizedHttpClient.HandleResponse<IEnumerable<DetailedShipmentContract>>(response);
         }
 
         public async Task<string> RegisterShipment(RegisterShipmentContract registerShipmentContract)

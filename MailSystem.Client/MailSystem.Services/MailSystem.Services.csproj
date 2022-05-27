@@ -6,7 +6,7 @@
 
     <ItemGroup>
       <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
-      <PackageReference Include="MailSystem.Contracts" Version="1.0.4" />
+      <PackageReference Include="MailSystem.Contracts" Version="1.0.5" />
       <PackageReference Include="MailSystem.Exceptions" Version="1.0.0" />
       <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.11" />
       <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.18.0" />

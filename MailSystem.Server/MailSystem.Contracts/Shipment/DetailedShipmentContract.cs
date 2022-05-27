@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using MailSystem.Contracts.Enums;
 using MailSystem.Contracts.Mailboxes;
-using MailSystem.Contracts.ShipmentEvents;
 using MailSystem.Contracts.ShipmentSizes;
 
 namespace MailSystem.Contracts.Shipment
@@ -23,6 +20,6 @@ namespace MailSystem.Contracts.Shipment
         
         public MailboxContract Mailbox { get; set; }
         
-        public ShipmentSizeContract ShipmentStatus { get; set; }
+        public ShipmentSizeContract ShipmentSize { get; set; }
     }
 }
