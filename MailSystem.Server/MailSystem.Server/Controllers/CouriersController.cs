@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using MailSystem.Contracts;
 using MailSystem.Contracts.Couriers;
@@ -25,20 +26,20 @@ namespace MailSystem.Server.Controllers
         }
         
         [HttpGet]
-        public IActionResult GetCouriers()
+        public async Task<IActionResult> GetCouriers()
         {
-            var couriers = _courierService.GetAll();
+            var couriers = await _courierService.GetAll();
 
             return Ok(_mapper.Map<List<CourierContract>>(couriers));
         }
         
         /// <response code="404">CourierNotFoundException</response>
         [HttpGet]
-        public IActionResult GetCourier(Guid courierId)
+        public async Task<IActionResult> GetCourier(Guid courierId)
         {
             try
             {
-                var courier = _courierService.Get(courierId);
+                var courier = await _courierService.Get(courierId);
 
                 return Ok(_mapper.Map<CourierContract>(courier));
             }
@@ -50,12 +51,12 @@ namespace MailSystem.Server.Controllers
 
         /// <response code="400">CourierEmailAlreadyUsedException</response>
         [HttpPost]
-        public IActionResult CreateCourier([FromBody] CreateCourierContract createCourierContract)
+        public async Task<IActionResult> CreateCourier([FromBody] CreateCourierContract createCourierContract)
         {
             try
             {
                 var courier = _mapper.Map<Courier>(createCourierContract);
-                var courierId = _courierService.Create(courier);
+                var courierId = await _courierService.Create(courier);
             
                 return Ok(courierId);
             }
@@ -68,12 +69,12 @@ namespace MailSystem.Server.Controllers
         /// <response code="404">CourierNotFoundException</response>
         /// <response code="400">CourierEmailAlreadyUsedException</response>
         [HttpPut]
-        public IActionResult UpdateCourier([FromBody] UpdateCourierContract updateCourierContract)
+        public async Task<IActionResult> UpdateCourier([FromBody] UpdateCourierContract updateCourierContract)
         {
             try
             {
                 var courier = _mapper.Map<Courier>(updateCourierContract);
-                _courierService.Update(courier);
+                await _courierService.Update(courier);
 
                 return Ok();
 
@@ -90,11 +91,11 @@ namespace MailSystem.Server.Controllers
 
         /// <response code="404">CourierNotFoundException</response>
         [HttpDelete]
-        public IActionResult DeleteCourier(Guid courierId)
+        public async Task<IActionResult> DeleteCourier(Guid courierId)
         {
             try
             {
-                _courierService.Delete(courierId);
+                await _courierService.Delete(courierId);
                 
                 return Ok();
 

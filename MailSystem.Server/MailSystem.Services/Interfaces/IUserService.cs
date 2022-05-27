@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MailSystem.Domain.Models;
 
 namespace MailSystem.Services.Interfaces
 {
     public interface IUserService
     {
-        IEnumerable<User> GetAll();
+        Task<IEnumerable<User>> GetAll();
 
-        Guid Create(User user);
+        Task<Guid> Create(User user);
 
-        User Get(Guid userId);
+        Task<User> Get(Guid userId);
         
-        void Update(User user);
+        Task Update(User user);
         
-        void Delete(Guid userId);
+        Task Delete(Guid userId);
 
-        User GetByEmail(string email);
+        Task<User> GetByEmail(string email);
 
-        void CheckIfUserExists(Guid userId);
+        Task CheckIfUserExists(Guid userId);
     }
 }

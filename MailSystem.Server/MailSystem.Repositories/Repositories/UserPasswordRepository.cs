@@ -1,10 +1,12 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using MailSystem.Domain.Models;
 using MailSystem.Repositories.Entities;
 using MailSystem.Repositories.Interfaces;
 using NHibernate;
+using NHibernate.Linq;
 
 namespace MailSystem.Repositories.Repositories
 {
@@ -19,7 +21,7 @@ namespace MailSystem.Repositories.Repositories
             _mapper = mapper;
         }
 
-        public Guid Create(string passwordHash, byte[] passwordSalt, Guid userId)
+        public async Task<Guid> Create(string passwordHash, byte[] passwordSalt, Guid userId)
         {
             using var session = _sessionFactory.OpenSession();
             using var transaction = session.BeginTransaction();
@@ -31,17 +33,17 @@ namespace MailSystem.Repositories.Repositories
                 PasswordSalt = passwordSalt,
             };
             
-            session.Save(userPasswordEntity);
-            transaction.Commit();
+            await session.SaveAsync(userPasswordEntity);
+            await transaction.CommitAsync();
 
             return userPasswordEntity.Id;
         }
 
-        public UserPassword GetByUserId(Guid userId)
+        public async Task<UserPassword> GetByUserId(Guid userId)
         {
             using var session = _sessionFactory.OpenSession();
 
-            var passwordEntity = session.Query<UserPasswordEntity>().SingleOrDefault(x => x.User.Id == userId);
+            var passwordEntity = await session.Query<UserPasswordEntity>().SingleOrDefaultAsync(x => x.User.Id == userId);
 
             return _mapper.Map<UserPassword>(passwordEntity);
         }

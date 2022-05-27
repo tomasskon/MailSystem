@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MailSystem.Domain.Models;
 
 namespace MailSystem.Services.Interfaces
 {
     public interface IMailboxService
     {
-        IEnumerable<Mailbox> GetAll();
+        Task<IEnumerable<Mailbox>> GetAll();
 
-        void CheckIfMailboxExists(Guid mailboxId);
+        Task CheckIfMailboxExists(Guid mailboxId);
     }
 }

@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MailSystem.Domain.Models;
 
 namespace MailSystem.Repositories.Interfaces
 {
     public interface ICourierRepository
     {
-        IEnumerable<Courier> GetAll();
+        Task<IEnumerable<Courier>> GetAll();
 
-        Guid Create(Courier courier);
+        Task<Guid> Create(Courier courier);
 
-        Courier Get(Guid courierId);
+        Task<Courier> Get(Guid courierId);
 
-        void Delete(Guid courierId);
+        Task Delete(Guid courierId);
 
-        bool CheckIfEmailAlreadyUsed(string email);
+        Task<bool> CheckIfEmailAlreadyUsed(string email);
 
-        bool CheckIfExists(Guid courierId);
+        Task<bool> CheckIfExists(Guid courierId);
 
-        void Update(Courier courier);
+        Task Update(Courier courier);
 
-        Courier GetByEmail(string email);
+        Task<Courier> GetByEmail(string email);
     }
 }

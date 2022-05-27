@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using MailSystem.Domain.Models;
 using MailSystem.Repositories.Entities;
 using MailSystem.Repositories.Interfaces;
 using NHibernate;
+using NHibernate.Linq;
 
 namespace MailSystem.Repositories.Repositories
 {
@@ -20,27 +22,27 @@ namespace MailSystem.Repositories.Repositories
             _mapper = mapper;
         }
 
-        public List<DetailedShipmentEvent> GetAllByTrackingId(string trackingId)
+        public async Task<List<DetailedShipmentEvent>> GetAllByTrackingId(string trackingId)
         {
             using var session = _sessionFactory.OpenSession();
 
             var shipmentEventEntities =
-                session.Query<ShipmentEventEntity>().Where(x => x.TrackingId == trackingId).ToList();
+                await session.Query<ShipmentEventEntity>().Where(x => x.TrackingId == trackingId).ToListAsync();
 
             return _mapper.Map<List<DetailedShipmentEvent>>(shipmentEventEntities);
         }
 
-        public Guid Create(ShipmentEvent shipmentEvent)
+        public async Task<Guid> Create(ShipmentEvent shipmentEvent)
         {
             using var session = _sessionFactory.OpenSession();
             using var transaction = session.BeginTransaction();
 
             var shipmentEventEntity = _mapper.Map<ShipmentEventEntity>(shipmentEvent);
-            shipmentEventEntity.Mailbox = new MailboxEntity {Id = shipmentEvent.MailboxId};
+            shipmentEventEntity.Mailbox = shipmentEvent.MailboxId.HasValue ? new MailboxEntity {Id = shipmentEvent.MailboxId.Value} : null;
             shipmentEventEntity.EventDate = DateTime.UtcNow;
-            session.Save(shipmentEventEntity);
+            await session.SaveAsync(shipmentEventEntity);
             
-            transaction.Commit();
+            await transaction.CommitAsync();
 
             return shipmentEventEntity.Id;
         }

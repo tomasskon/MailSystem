@@ -1,12 +1,13 @@
 using System;
+using System.Threading.Tasks;
 using MailSystem.Domain.Models;
 
 namespace MailSystem.Repositories.Interfaces
 {
     public interface IUserPasswordRepository
     {
-        Guid Create(string passwordHash, byte[] passwordSalt, Guid userId);
+        Task<Guid> Create(string passwordHash, byte[] passwordSalt, Guid userId);
 
-        UserPassword GetByUserId(Guid userId);
+        Task<UserPassword> GetByUserId(Guid userId);
     }
 }

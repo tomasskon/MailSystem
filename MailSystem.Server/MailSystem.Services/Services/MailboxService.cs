@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MailSystem.Domain.Models;
 using MailSystem.Exception;
 using MailSystem.Repositories.Interfaces;
@@ -17,14 +18,14 @@ namespace MailSystem.Services.Services
             _mailboxRepository = mailboxRepository;
         }
 
-        public IEnumerable<Mailbox> GetAll()
+        public async Task<IEnumerable<Mailbox>> GetAll()
         {
-            return _mailboxRepository.GetAll();
+            return await _mailboxRepository.GetAll();
         }
 
-        public void CheckIfMailboxExists(Guid mailboxId)
+        public async Task CheckIfMailboxExists(Guid mailboxId)
         {
-            if (!_mailboxRepository.CheckIfExists(mailboxId))
+            if (!await _mailboxRepository.CheckIfExists(mailboxId))
                 throw new MailboxNotFoundException($"Mailbox not found. Mailbox id: {mailboxId}");
         }
     }

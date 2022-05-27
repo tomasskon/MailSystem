@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using MailSystem.Contracts.ShipmentSizes;
 using MailSystem.Services.Interfaces;
@@ -21,9 +22,9 @@ namespace MailSystem.Server.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetShipmentSizes()
+        public async Task<IActionResult> GetShipmentSizes()
         {
-            var shipmentSizes = _shipmentSizeService.GetAll();
+            var shipmentSizes = await _shipmentSizeService.GetAll();
 
             return Ok(_mapper.Map<List<ShipmentSizeContract>>(shipmentSizes));
         }

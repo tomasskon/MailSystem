@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using MailSystem.Contracts.Mailboxes;
 using MailSystem.Services.Interfaces;
@@ -21,9 +22,9 @@ namespace MailSystem.Server.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetMailboxes()
+        public async Task<IActionResult> GetMailboxes()
         {
-            var mailboxes = _mailboxService.GetAll();
+            var mailboxes = await _mailboxService.GetAll();
 
             return Ok(_mapper.Map<List<MailboxContract>>(mailboxes));
         }

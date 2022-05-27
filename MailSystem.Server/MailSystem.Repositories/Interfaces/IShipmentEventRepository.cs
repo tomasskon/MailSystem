@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MailSystem.Domain.Models;
 
 namespace MailSystem.Repositories.Interfaces
 {
     public interface IShipmentEventRepository
     {
-        List<DetailedShipmentEvent> GetAllByTrackingId(string trackingId);
+        Task<List<DetailedShipmentEvent>> GetAllByTrackingId(string trackingId);
 
-        Guid Create(ShipmentEvent shipmentEvent);
+        Task<Guid> Create(ShipmentEvent shipmentEvent);
     }
 }

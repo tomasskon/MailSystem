@@ -1,8 +1,9 @@
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using AutoMapper;
 using MailSystem.Contracts;
 using MailSystem.Contracts.ShipmentEvents;
+using MailSystem.Domain.Enums;
 using MailSystem.Exception;
 using MailSystem.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -25,11 +26,11 @@ namespace MailSystem.Server.Controllers
 
         /// <response code="404">NoShipmentEventsFoundException</response>
         [HttpGet]
-        public IActionResult GetEventsByTrackingId(string trackingId)
+        public async Task<IActionResult> GetEventsByTrackingId(string trackingId)
         {
             try
             {
-                var shipmentEvents = _shipmentEventService.GetAllByTrackingId(trackingId);
+                var shipmentEvents =await _shipmentEventService.GetAllByTrackingId(trackingId);
 
                 return Ok(_mapper.Map<List<DetailedShipmentEventContract>>(shipmentEvents));
             }
@@ -37,6 +38,17 @@ namespace MailSystem.Server.Controllers
             {
                 return NotFound(new StandardExceptionResponse(ex));
             }
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> UpdateShipmentStatus([FromBody]UpdateShipmentStatusContract updateShipmentStatusContract)
+        {
+            await _shipmentEventService.CreateShipmentEvent(
+                updateShipmentStatusContract.MailboxId,
+                (ShipmentStatus)(updateShipmentStatusContract.ShipmentStatus), 
+                updateShipmentStatusContract.TrackingId);
+
+            return Ok();
         }
     }
 }

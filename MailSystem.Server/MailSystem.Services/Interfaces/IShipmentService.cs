@@ -1,10 +1,11 @@
 using System;
+using System.Threading.Tasks;
 using MailSystem.Domain.Models;
 
 namespace MailSystem.Services.Interfaces
 {
     public interface IShipmentService
     {
-        string CreateShipment(Shipment shipment);
+        Task<string> CreateShipment(Shipment shipment);
     }
 }

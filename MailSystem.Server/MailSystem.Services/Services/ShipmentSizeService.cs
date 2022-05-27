@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MailSystem.Domain.Models;
 using MailSystem.Exception;
 using MailSystem.Repositories.Interfaces;
@@ -16,14 +17,14 @@ namespace MailSystem.Services.Services
             _shipmentSizeRepository = shipmentSizeRepository;
         }
 
-        public IEnumerable<ShipmentSize> GetAll()
+        public async Task<IEnumerable<ShipmentSize>> GetAll()
         {
-            return _shipmentSizeRepository.GetAll();
+            return await _shipmentSizeRepository.GetAll();
         }
 
-        public void CheckIfShipmentSizeExists(Guid shipmentSizeId)
+        public async Task CheckIfShipmentSizeExists(Guid shipmentSizeId)
         {
-            if (!_shipmentSizeRepository.CheckIfExists(shipmentSizeId))
+            if (!await _shipmentSizeRepository.CheckIfExists(shipmentSizeId))
                 throw new ShipmentSizeNotFoundException($"Shipment size not found. Shipment size id:{shipmentSizeId}");
         }
     }
