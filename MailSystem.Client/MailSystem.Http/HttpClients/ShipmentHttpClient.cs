@@ -14,12 +14,12 @@ namespace MailSystem.Http.HttpClients
             _authorizedHttpClient = authorizedHttpClient;
         }
 
-        public async Task RegisterShipment(RegisterShipmentContract registerShipmentContract)
+        public async Task<string> RegisterShipment(RegisterShipmentContract registerShipmentContract)
         {
             using var client = await _authorizedHttpClient.CreateHttpClient();
             var response = await client.PostAsJsonAsync("Shipments/RegisterShipment", registerShipmentContract);
 
-            await _authorizedHttpClient.HandleResponse(response);
+            return await _authorizedHttpClient.HandleStringResponse(response);
         }
     }
 }

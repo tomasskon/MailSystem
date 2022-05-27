@@ -9,6 +9,8 @@ namespace MailSystem.Http.Interfaces
 
         Task<T> HandleResponse<T>(HttpResponseMessage response);
 
+        Task<string> HandleStringResponse(HttpResponseMessage response);
+
         Task HandleResponse(HttpResponseMessage response);
     }
 }

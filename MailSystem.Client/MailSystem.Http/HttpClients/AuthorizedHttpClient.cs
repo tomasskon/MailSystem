@@ -41,6 +41,13 @@ namespace MailSystem.Http.HttpClients
 
             throw await HandleError(response);
         }
+        public async Task<string> HandleStringResponse(HttpResponseMessage response)
+        {
+            if (response.IsSuccessStatusCode)
+                return await response.Content.ReadAsStringAsync();
+
+            throw await HandleError(response);
+        }
 
         public async Task HandleResponse(HttpResponseMessage response)
         {

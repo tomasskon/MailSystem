@@ -5,6 +5,6 @@ namespace MailSystem.Http.Interfaces
 {
     public interface IShipmentHttpClient
     {
-        Task RegisterShipment(RegisterShipmentContract registerShipmentContract);
+        Task<string> RegisterShipment(RegisterShipmentContract registerShipmentContract);
     }
 }
