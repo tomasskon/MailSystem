@@ -44,5 +44,12 @@ namespace MailSystem.Repositories.Repositories
 
             return shipmentEntity.Id;
         }
+        
+        public async Task<Shipment> Get(Guid shipmentId)
+        {
+            var shipmentEntity = await _session.GetAsync<ShipmentEntity>(shipmentId);
+
+            return _mapper.Map<Shipment>(shipmentEntity);
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿using MailSystem.Services.Interfaces;
+﻿using DinkToPdf;
+using DinkToPdf.Contracts;
+using MailSystem.Services.Interfaces;
 using MailSystem.Services.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,6 +19,8 @@ namespace MailSystem.Server.Infrastructure
             services.AddScoped<IMailboxService, MailboxService>();
             services.AddScoped<IShipmentService, ShipmentService>();
             services.AddScoped<IShipmentEventService, ShipmentEventService>();
+            services.AddScoped<IInvoiceService, InvoiceService>();
+            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
         }
     }
 }

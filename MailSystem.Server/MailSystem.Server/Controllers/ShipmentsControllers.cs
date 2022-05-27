@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
 using MailSystem.Contracts;
@@ -18,11 +19,13 @@ namespace MailSystem.Server.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IShipmentService _shipmentService;
+        private readonly IInvoiceService _invoiceService;
         
-        public ShipmentsController(IMapper mapper, IShipmentService shipmentService)
+        public ShipmentsController(IMapper mapper, IShipmentService shipmentService, IInvoiceService invoiceService)
         {
             _mapper = mapper;
             _shipmentService = shipmentService;
+            _invoiceService = invoiceService;
         }
 
         /// <response code="404">UserNotFoundException, NoShipmentFoundException</response>
@@ -63,6 +66,13 @@ namespace MailSystem.Server.Controllers
             {
                 return NotFound(new StandardExceptionResponse(ex));
             }
+        }
+        
+        [HttpGet]
+        public async Task<FileStreamResult> GetPdf([FromQuery] Guid shipmentId)
+        {
+            Response.Headers.Add("Content-Disposition", "attachment; filename=shipment.pdf;");
+            return File(new MemoryStream(await _invoiceService.GenerateInvoice(shipmentId)), "application/octet-stream");
         }
     }
 }
