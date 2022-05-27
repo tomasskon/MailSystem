@@ -20,12 +20,14 @@ namespace MailSystem.Server.Controllers
         private readonly IMapper _mapper;
         private readonly IShipmentService _shipmentService;
         private readonly IInvoiceService _invoiceService;
-        
-        public ShipmentsController(IMapper mapper, IShipmentService shipmentService, IInvoiceService invoiceService)
+
+        public ShipmentsController(IMapper mapper, IShipmentService shipmentService,
+            IDynamicInvoiceService dynamicInvoiceService)
         {
             _mapper = mapper;
             _shipmentService = shipmentService;
-            _invoiceService = invoiceService;
+            _invoiceService = dynamicInvoiceService.GetServiceByConfiguration();
+
         }
 
         /// <response code="404">UserNotFoundException, NoShipmentFoundException</response>
