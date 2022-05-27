@@ -42,6 +42,10 @@ namespace MailSystem.Server.Controllers
             {
                 return NotFound(new StandardExceptionResponse(ex));
             }
+            catch (UserNotFoundException ex)
+            {
+                return NotFound(new StandardExceptionResponse(ex));
+            }
         }
         
         /// <response code="404">UserNotFoundException, MailboxNotFoundException, ShipmentSizeNotFoundException</response>

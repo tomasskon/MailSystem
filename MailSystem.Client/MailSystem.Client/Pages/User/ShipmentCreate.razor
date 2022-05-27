@@ -12,6 +12,7 @@
 @inject IMailboxHttpClient MailboxHttpClient;
 @inject IShipmentHttpClient ShipmentHttpClient;
 @inject NavigationManager NavigationManager;
+@inject IAuthenticationService AuthenticationService;
 
 <div class="container">
     <div class="card">
@@ -146,6 +147,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await AuthenticationService.OnlyUser();
         _shipmentSizes = await ShipmentSizeHttpClient.GetShipmentSizes();
         _mailboxes = await MailboxHttpClient.GetMailboxes();
         _user = await StorageService.GetUserInfo();

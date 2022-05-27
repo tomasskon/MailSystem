@@ -16,12 +16,12 @@ namespace MailSystem.Http.HttpClients
             _authorizedHttpClient = authorizedHttpClient;
         }
 
-        public async Task<IEnumerable<DetailedShipmentContract>> GetUserShipments(Guid userId)
+        public async Task<IEnumerable<ShipmentContract>> GetUserShipments(Guid userId)
         {
             using var client = await _authorizedHttpClient.CreateHttpClient();
             var response = await client.GetAsync("Shipments/GetUserShipments?userId=" + userId);
 
-            return await _authorizedHttpClient.HandleResponse<IEnumerable<DetailedShipmentContract>>(response);
+            return await _authorizedHttpClient.HandleResponse<IEnumerable<ShipmentContract>>(response);
         }
 
         public async Task<string> RegisterShipment(RegisterShipmentContract registerShipmentContract)

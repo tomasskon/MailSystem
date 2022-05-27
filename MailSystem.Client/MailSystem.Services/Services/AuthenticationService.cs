@@ -26,7 +26,7 @@ namespace MailSystem.Services.Services
         public async Task OnlyUser()
         {
             if (await _storageService.GetUserType() != UserType.User) 
-                _navigationManager.NavigateTo("/");
+                _navigationManager.NavigateTo("/courier");
         }
 
         public async Task OnlyCourier()
@@ -44,11 +44,12 @@ namespace MailSystem.Services.Services
         public async Task Login(string jwtToken)
         {
             await _storageService.SetJwtToken(jwtToken);
+            await _storageService.UpdateUserInfo();
 
             if (await _storageService.GetUserType() == UserType.User)
-                await _storageService.UpdateUserInfo();
-
-            _navigationManager.NavigateTo("/");
+                _navigationManager.NavigateTo("/");
+            else
+                _navigationManager.NavigateTo("/courier");
         }
 
         public async Task Logout()

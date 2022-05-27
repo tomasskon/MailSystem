@@ -4,9 +4,11 @@
 @using MailSystem.Exception
 @using MailSystem.Http.Exceptions
 @using Microsoft.IdentityModel.Tokens
+@using MailSystem.Contracts.Enums
 
 @inject NavigationManager NavigationManager;
 @inject IShipmentEventHttpClient ShipmentEventHttpClient;
+@inject IAuthenticationService AuthenticationService;
 
 <div class="container">
     <div class="card">
@@ -36,14 +38,16 @@
                             <tr>
                                 <th>Įvykis</th>
                                 <th>Data</th>
+                                <th>Vieta</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach (var eventData in _shipmentEventList)
                             {
                                 <tr>
-                                    <td>@eventData.ShipmentStatus</td>
+                                    <td>@GetStatusInLithuanian(eventData.ShipmentStatus)</td>
                                     <td>@eventData.EventDate</td>
+                                    <td>@eventData.Mailbox?.Location</td>
                                 </tr>
                             }
                             </tbody>
@@ -68,6 +72,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await AuthenticationService.OnlyUser();
         var absoluteUri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
         if (QueryHelpers.ParseQuery(absoluteUri.Query).TryGetValue("trackingNumber", out var number))
         {
@@ -102,5 +107,17 @@
                 _ => exception.ServerExceptionMessage
             };
         }
+    }
+
+    private string GetStatusInLithuanian(ShipmentStatus status)
+    {
+        return status switch 
+        {
+            ShipmentStatus.Submitted => "Pateikta",
+            ShipmentStatus.Received => "Gauta",
+            ShipmentStatus.Delivering => "Pristatoma",
+            ShipmentStatus.Delivered => "Pristatyta",
+            _ => "-"
+        };
     }
 }

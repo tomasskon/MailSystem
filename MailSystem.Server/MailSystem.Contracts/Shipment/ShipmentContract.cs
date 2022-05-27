@@ -9,6 +9,8 @@ namespace MailSystem.Contracts.Shipment
     {
         public Guid Id { get; set; }
         
+        public string TrackingId { get; set; }
+        
         public string ReceiverFullName { get; set; }
         
         public MailboxContract Mailbox { get; set; }

@@ -6,6 +6,7 @@
 
 @inject IShipmentHttpClient ShipmentHttpClient;
 @inject IStorageService StorageService;
+@inject IAuthenticationService AuthenticationService;
 
 <div class="container">
     <div class="card">
@@ -46,7 +47,7 @@
                 }
                 else
                 {
-                    <div>Loading...</div>
+                    <div>Siuntų nėra</div>
                 }
             </div>
         </div>
@@ -55,10 +56,11 @@
 
 @code {
     private string _errorMessage = "";
-    private IEnumerable<DetailedShipmentContract> _shipmentList;
+    private IEnumerable<ShipmentContract> _shipmentList;
 
     protected override async Task OnInitializedAsync()
     {
+        await AuthenticationService.OnlyUser();
         try
         {
             var userId = await StorageService.GetUserId();

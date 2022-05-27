@@ -7,7 +7,7 @@ namespace MailSystem.Http.Interfaces
 {
     public interface IShipmentHttpClient
     {
-        Task<IEnumerable<DetailedShipmentContract>> GetUserShipments(Guid userId);
+        Task<IEnumerable<ShipmentContract>> GetUserShipments(Guid userId);
 
         Task<string> RegisterShipment(RegisterShipmentContract registerShipmentContract);
     }

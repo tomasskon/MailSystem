@@ -1,12 +1,14 @@
 ﻿@page "/"
 @using MailSystem.Contracts.Users
 @using com.google.i18n.phonenumbers
+@using MailSystem.Contracts.Enums
 @using MailSystem.Exception
 @using MailSystem.Http.Exceptions
 
 @inject IStorageService StorageService;
 @inject IAuthenticationService AuthenticationService;
 @inject IUserHttpClient UserHttpClient;
+@inject NavigationManager NavigationManager;
 
 <div class="container">
     <div class="card">
@@ -63,7 +65,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _user = await StorageService.GetUserInfo();
+        await AuthenticationService.OnlyUser();
+
+        if (await StorageService.GetUserType() is not UserType.Courier)
+            _user = await StorageService.GetUserInfo();
     }
 
     private bool ValidateForm()
