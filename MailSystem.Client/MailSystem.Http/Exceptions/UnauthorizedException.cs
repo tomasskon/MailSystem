@@ -2,7 +2,7 @@ using System;
 
 namespace MailSystem.Http.Exceptions
 {
-    public class UnauthorizedException : Exception
+    public class UnauthorizedException : System.Exception
     {
         public UnauthorizedException() : 
             base(message: "You must login to access this page")

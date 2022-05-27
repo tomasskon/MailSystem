@@ -58,7 +58,7 @@ namespace MailSystem.Services.Services
 
         public async Task UpdateUserInfo()
         {
-            var userId = JwtParser.GetUserId(await GetJwtToken());
+            var userId = await GetUserId();
             if (userId.HasValue)
             {
                 var user = await _userHttpClient.GetUser(userId.Value);

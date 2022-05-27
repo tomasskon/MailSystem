@@ -63,3 +63,9 @@ a, .btn-link {
 .flex-100 {
     flex: 0 0 100%;
 }
+
+.custom-bottom-border {
+    padding-bottom: 3px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #C1C1C1;
+}

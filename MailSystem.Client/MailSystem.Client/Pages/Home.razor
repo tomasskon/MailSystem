@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using MailSystem.Contracts.Users
 @using com.google.i18n.phonenumbers
+@using MailSystem.Exception
 @using MailSystem.Http.Exceptions
 
 @inject IStorageService StorageService;
@@ -19,26 +20,33 @@
                             @_errorMessage
                         </div>
                     }
-                    <EditForm Model="@_user" OnValidSubmit="HandleEditUser">
-                        <DataAnnotationsValidator />
-                        <ValidationSummary/>
-                        <div class="form-group mb-4">
-                            <label for="fullname">Vardas ir pavardė</label>
-                            <InputText type="text" id="fullname" class="form-control" @bind-Value="@_user.FullName" required/>
-                        </div>
-                        <div class="form-group mb-4">
-                            <label for="email">El. pašto adresas</label>
-                            <InputText type="email" id="email" class="form-control" @bind-Value="@_user.Email" required/>
-                        </div>
-                        <div class="form-group mb-4">
-                            <label for="phone">Telefono numeris</label>
-                            <InputText type="text" id="phone" class="form-control" @bind-Value="@_user.Phone" required/>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <button type="submit" class="btn btn-primary">Redaguoti duomenis</button>
-                            <button type="button" @onclick="AuthenticationService.Logout" class="btn btn-danger">Atsijungti</button>
-                        </div>
-                    </EditForm>
+                    @if (_user is not null)
+                    {
+                        <EditForm Model="@_user" OnValidSubmit="HandleEditUser">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary/>
+                            <div class="form-group mb-4">
+                                <label for="fullname">Vardas ir pavardė</label>
+                                <InputText type="text" id="fullname" class="form-control" @bind-Value="@_user.FullName" required/>
+                            </div>
+                            <div class="form-group mb-4">
+                                <label for="email">El. pašto adresas</label>
+                                <InputText type="email" id="email" class="form-control" @bind-Value="@_user.Email" required/>
+                            </div>
+                            <div class="form-group mb-4">
+                                <label for="phone">Telefono numeris</label>
+                                <InputText type="text" id="phone" class="form-control" @bind-Value="@_user.Phone" required/>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <button type="submit" class="btn btn-primary">Redaguoti duomenis</button>
+                                <button type="button" @onclick="AuthenticationService.Logout" class="btn btn-danger">Atsijungti</button>
+                            </div>
+                        </EditForm>
+                    }
+                    else
+                    {
+                        <div>Loading...</div>
+                    }
                 </div>
                 <div class="col-md-6 d-flex justify-content-center align-items-center">
                     <img src="img/user.png" alt="User image">
@@ -95,7 +103,7 @@
         {
             _errorMessage = exception.ServerExceptionName switch
             {
-                "UserEmailAlreadyUsedException" => "Šis el. pašto adresas jau naudojamas",
+                nameof(UserEmailAlreadyUsedException) => "Šis el. pašto adresas jau naudojamas",
                 _ => exception.ServerExceptionMessage
             };
         }

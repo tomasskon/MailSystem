@@ -1,0 +1,209 @@
+@page "/create-shipment"
+@using MailSystem.Contracts.Users
+@using MailSystem.Contracts.Mailboxes
+@using MailSystem.Contracts.Shipment
+@using MailSystem.Contracts.ShipmentSizes
+@using MailSystem.Exception
+@using MailSystem.Http.Exceptions
+@using com.google.i18n.phonenumbers
+
+@inject IStorageService StorageService;
+@inject IShipmentSizeHttpClient ShipmentSizeHttpClient;
+@inject IMailboxHttpClient MailboxHttpClient;
+@inject IShipmentHttpClient ShipmentHttpClient;
+@inject NavigationManager NavigationManager;
+
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="mb-4">Siųsti siuntą</h2>
+            @if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                <div class="alert alert-danger mb-2">
+                    @_errorMessage
+                </div>
+            }
+            @if (_registerShipment is not null)
+            {
+                <EditForm Model="@_registerShipment">
+                    @if (_step == 1)
+                    {
+                        <div class="px-0 px-lg-5">
+                            <h2>Siuntėjas</h2>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="sender_name">Vardas ir pavardė</label>
+                                        <input id="sender_name" value="@_user.FullName" class="form-control" disabled/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="sender_email">El. pašto adresas</label>
+                                        <input id="sender_email" value="@_user.Email" class="form-control" disabled/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="sender_phone">Telefono numeris</label>
+                                        <input id="sender_phone" value="@_user.Phone" class="form-control" disabled/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="shipment_size">Siuntos dydis</label>
+                                        <InputSelect id="shipment_size" @bind-Value="_registerShipment.ShipmentSizeId" class="form-control" required>
+                                            @foreach (var size in _shipmentSizes)
+                                            {
+                                                <option value="@size.Id">
+                                                    @size.Name (@size.Width x @size.Length x @size.Height cm, @size.Weight kg)
+                                                </option>
+                                            }
+                                        </InputSelect>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="description">Siuntos aprašymas</label>
+                                        <InputTextArea id="description" @bind-Value="_registerShipment.Description" class="form-control"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <h2 class="mt-4">Gavėjas</h2>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="receiver_name">Vardas ir pavardė</label>
+                                        <InputText id="receiver_name" @bind-Value="@_registerShipment.ReceiverFullName" class="form-control" required/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="receiver_email">El. pašto adresas</label>
+                                        <InputText type="email" id="receiver_email" @bind-Value="@_registerShipment.ReceiverEmail" class="form-control" required/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="receiver_phone">Telefono numeris</label>
+                                        <InputText id="receiver_phone" @bind-Value="@_registerShipment.ReceiverPhoneNumber" class="form-control" required/>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="mailbox">Pristatymo vieta</label>
+                                        <InputSelect id="mailbox" @bind-Value="_registerShipment.MailBoxId" class="form-control" required>
+                                            @foreach (var mailbox in _mailboxes)
+                                            {
+                                                <option value="@mailbox.Id">@mailbox.Location</option>
+                                            }
+                                        </InputSelect>
+                                    </div>
+                                </div>
+                                <div class="col-12 d-flex justify-content-end">
+                                    <button type="button" class="btn btn-primary" @onclick="ProceedForm">Toliau</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else if (_step == 2)
+                    {
+                        <div class="row">
+                            <div class="col-md-6 offset-md-3">
+                                <h2 class="mb-3">Siuntos patvirtinimas</h2>
+                                <div class="mb-2">
+                                    <small>Siunta</small>
+                                    <div class="custom-bottom-border">Siuntos dydis: @_shipmentSizes.First(size => size.Id == _registerShipment.ShipmentSizeId).Name</div>
+                                    <small>Siuntėjas</small>
+                                    <div class="custom-bottom-border">@_user.FullName, @_user.Phone</div>
+                                    <small>Gavėjas</small>
+                                    <div class="custom-bottom-border">@_registerShipment.ReceiverFullName, @_registerShipment.ReceiverPhoneNumber</div>
+                                    <small>Pristatymo vieta</small>
+                                    <div class="custom-bottom-border">@_mailboxes.First(mailbox => mailbox.Id == _registerShipment.MailBoxId).Location</div>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <button class="btn btn-danger" @onclick="() => _step -= 1">Taisyti</button>
+                                    <button class="btn btn-primary" @onclick="ProceedForm">Apmokėti</button>
+                                </div>
+                                <img src="img/truck.png" alt="Truck image" class="w-100 mb-4">
+                            </div>
+                        </div>
+                    }
+                </EditForm>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private RegisterShipmentContract _registerShipment;
+    private IEnumerable<ShipmentSizeContract> _shipmentSizes;
+    private IEnumerable<MailboxContract> _mailboxes;
+    private int _step = 1;
+    private UserContract _user;
+    private string _errorMessage = "";
+    private readonly PhoneNumberUtil _phoneNumberUtil = PhoneNumberUtil.getInstance();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _shipmentSizes = await ShipmentSizeHttpClient.GetShipmentSizes();
+        _mailboxes = await MailboxHttpClient.GetMailboxes();
+        _user = await StorageService.GetUserInfo();
+        _registerShipment = new RegisterShipmentContract
+        {
+            UserId = _user.Id,
+            ShipmentSizeId = _shipmentSizes.First().Id,
+            MailBoxId = _mailboxes.First().Id
+        };
+    }
+
+    private bool ValidateForm()
+    {
+        _errorMessage = "";
+        
+        if (string.IsNullOrEmpty(_registerShipment.ReceiverEmail))
+        {
+            _errorMessage = "Gavėjo el. pašto adresas negali būti tuščias";
+        }
+        else if (string.IsNullOrEmpty(_registerShipment.ReceiverPhoneNumber))
+        {
+            _errorMessage = "Gavėjo telefono numeris negali būti tuščias";
+        } else if (!_phoneNumberUtil.isPossibleNumber(_registerShipment.ReceiverPhoneNumber, "LT"))
+        {
+            _errorMessage = "Gavėjo telefono numeris nėra teisingas";
+        }
+        else if (string.IsNullOrEmpty(_registerShipment.ReceiverFullName))
+        {
+            _errorMessage = "Gavėjo vardas ir pavardė privalo būti įvesti";
+        }
+
+        return string.IsNullOrEmpty(_errorMessage);
+    }
+
+    private async Task ProceedForm()
+    {
+        if (!ValidateForm())
+            return;
+        
+        if (_step == 2)
+        {
+            try
+            {
+                var trackingCode = await ShipmentHttpClient.RegisterShipment(_registerShipment);
+                NavigationManager.NavigateTo("/shipment-registered/" + trackingCode);
+            }
+            catch (ServerRequestException exception)
+            {
+                _errorMessage = exception.ServerExceptionName switch 
+                {
+                    nameof(UserNotFoundException) => "Vartotojas nerastas",
+                    nameof(MailboxNotFoundException) => "Pristatymo vieta nerasta",
+                    nameof(ShipmentSizeNotFoundException) => "Siuntos dydis nerastas",
+                    _ => exception.ServerExceptionMessage
+                };
+            }
+        }
+
+        _step += 1;
+    }
+}

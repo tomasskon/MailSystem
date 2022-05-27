@@ -41,6 +41,13 @@ namespace MailSystem.Http.HttpClients
 
             throw await HandleError(response);
         }
+        public async Task<string> HandleStringResponse(HttpResponseMessage response)
+        {
+            if (response.IsSuccessStatusCode)
+                return await response.Content.ReadAsStringAsync();
+
+            throw await HandleError(response);
+        }
 
         public async Task HandleResponse(HttpResponseMessage response)
         {
@@ -48,7 +55,7 @@ namespace MailSystem.Http.HttpClients
                 throw await HandleError(response);
         }
 
-        private async Task<Exception> HandleError(HttpResponseMessage response)
+        private async Task<System.Exception> HandleError(HttpResponseMessage response)
         {
             if (response.StatusCode == HttpStatusCode.Unauthorized)
                 return new UnauthorizedException();
