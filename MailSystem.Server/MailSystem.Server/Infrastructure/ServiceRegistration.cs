@@ -19,8 +19,10 @@ namespace MailSystem.Server.Infrastructure
             services.AddScoped<IMailboxService, MailboxService>();
             services.AddScoped<IShipmentService, ShipmentService>();
             services.AddScoped<IShipmentEventService, ShipmentEventService>();
-            services.AddScoped<IInvoiceService, InvoiceService>();
             services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+            services.AddScoped<IDynamicInvoiceService, DynamicInvoiceService>();
+            services.AddScoped<InvoiceService>();
+            services.AddScoped<InvoiceServiceLithuanian>();
         }
     }
 }
