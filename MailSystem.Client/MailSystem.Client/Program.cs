@@ -27,6 +27,7 @@ namespace MailSystem.Client
             builder.Services.AddTransient<IShipmentSizeHttpClient, ShipmentSizeHttpClient>();
             builder.Services.AddTransient<IMailboxHttpClient, MailboxHttpClient>();
             builder.Services.AddTransient<IShipmentHttpClient, ShipmentHttpClient>();
+            builder.Services.AddTransient<IShipmentEventHttpClient, ShipmentEventHttpClient>();
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
             builder.Services.AddScoped<IStorageService, StorageService>();
             await builder.Build().RunAsync();

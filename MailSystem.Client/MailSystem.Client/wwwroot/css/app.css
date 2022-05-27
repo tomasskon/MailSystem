@@ -69,3 +69,7 @@ a, .btn-link {
     margin-bottom: 8px;
     border-bottom: 1px solid #C1C1C1;
 }
+
+.custom-table {
+    border: 1px solid #000000;
+}
