@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using FluentNHibernate.Testing.Values;
 using MailSystem.Domain.Models;
 using MailSystem.Repositories.Entities;
 using MailSystem.Repositories.Interfaces;
@@ -14,36 +13,33 @@ namespace MailSystem.Repositories.Repositories
 {
     public class ShipmentRepository : IShipmentRepository
     {
-        private readonly ISessionFactory _sessionFactory;
+        private readonly ISession _session;
         private readonly IMapper _mapper;
 
-        public ShipmentRepository(IMapper mapper, ISessionFactory sessionFactory)
+        public ShipmentRepository(IMapper mapper, ISession session)
         {
             _mapper = mapper;
-            _sessionFactory = sessionFactory;
+            _session = session;
         }
 
         public async Task<List<DetailedShipment>> GetUserShipments(Guid userId)
         {
-            using var session = _sessionFactory.OpenSession();
-
             var shipmentEntities =
-                await session.Query<ShipmentEntity>().Where(x => x.User.Id == userId).ToListAsync();
+                await _session.Query<ShipmentEntity>().Where(x => x.User.Id == userId).ToListAsync();
 
             return _mapper.Map<List<DetailedShipment>>(shipmentEntities);
         }
 
         public async Task<Guid> Create(Shipment shipment)
         {
-            using var session = _sessionFactory.OpenSession();
-            using var transaction = session.BeginTransaction();
+            using var transaction = _session.BeginTransaction();
             
             var shipmentEntity = _mapper.Map<ShipmentEntity>(shipment);
             shipmentEntity.User = new UserEntity {Id = shipment.UserId};
             shipmentEntity.ShipmentSize = new ShipmentSizeEntity {Id = shipment.ShipmentSizeId};
             shipmentEntity.MailBox = new MailboxEntity {Id = shipment.MailBoxId};
 
-            await session.SaveAsync(shipmentEntity);
+            await _session.SaveAsync(shipmentEntity);
             await transaction.CommitAsync();
 
             return shipmentEntity.Id;
