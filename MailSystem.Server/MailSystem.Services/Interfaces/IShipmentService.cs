@@ -8,7 +8,7 @@ namespace MailSystem.Services.Interfaces
     public interface IShipmentService
     {
         Task<List<DetailedShipment>> GetUserShipments(Guid userId);
-
         Task<string> CreateShipment(Shipment shipment);
+        Task<Shipment> Get(Guid shipmentId);
     }
 }

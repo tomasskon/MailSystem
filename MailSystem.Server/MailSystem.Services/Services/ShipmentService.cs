@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using MailSystem.Domain.Enums;
 using MailSystem.Domain.Models;
@@ -51,6 +50,16 @@ namespace MailSystem.Services.Services
             await _shipmentEventService.CreateShipmentEvent(shipmentId, shipment.MailBoxId, ShipmentStatus.Submitted);
 
             return shipment.TrackingId;
+        }
+        
+        public async Task<Shipment> Get(Guid shipmentId)
+        {
+            var shipment = await _shipmentRepository.Get(shipmentId);
+
+            if (shipment is null)
+                throw new ShipmentNotFoundException($"Shipment not found. User id: {shipmentId}");
+
+            return shipment;
         }
 
         private static string CreateTrackingId()
