@@ -3,6 +3,7 @@
 ## Project structure
   - MailSystem.Client -> Front end application using Blazor WebAssembly. 
   - MailSystem.Server -> Back end ASP.NET Core web api project. 
+  - Nugets -> Contract and Exception libraries shared between Server and Client
 
 ## Required tools
   - IDE of choise
