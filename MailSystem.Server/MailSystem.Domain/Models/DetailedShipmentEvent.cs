@@ -7,6 +7,8 @@ namespace MailSystem.Domain.Models
     {
         public Guid Id { get; set; }
         
+        public Guid ShipmentId { get; set; }
+        
         public Mailbox Mailbox { get; set; }
         
         public DateTime EventDate { get; set; }

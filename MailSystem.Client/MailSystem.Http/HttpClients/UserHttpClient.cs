@@ -16,14 +16,6 @@ namespace MailSystem.Http.HttpClients
             _authorizedHttpClient = authorizedHttpClient;
         }
 
-        public async Task<IEnumerable<UserContract>> GetUsers()
-        {
-            using var client = await _authorizedHttpClient.CreateHttpClient();
-            var response = await client.GetAsync("Users/GetUsers");
-
-            return await _authorizedHttpClient.HandleResponse<IEnumerable<UserContract>>(response);
-        }
-
         public async Task<UserContract> GetUser(Guid userId)
         {
             using var client = await _authorizedHttpClient.CreateHttpClient();

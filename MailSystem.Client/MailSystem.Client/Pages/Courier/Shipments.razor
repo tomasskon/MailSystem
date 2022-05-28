@@ -1,0 +1,185 @@
+@page "/courier/shipments"
+@using Microsoft.AspNetCore.WebUtilities
+@using MailSystem.Contracts.ShipmentEvents
+@using MailSystem.Exception
+@using MailSystem.Http.Exceptions
+@using Microsoft.IdentityModel.Tokens
+@using MailSystem.Contracts.Enums
+@using MailSystem.Contracts.Mailboxes
+
+@inject NavigationManager NavigationManager;
+@inject IShipmentEventHttpClient ShipmentEventHttpClient;
+@inject IAuthenticationService AuthenticationService;
+@inject IMailboxHttpClient MailboxHttpClient;
+
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="mb-5">Sekti siuntą</h2>
+            @if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                <div class="alert alert-danger mb-2">
+                    @_errorMessage
+                </div>
+            }
+            <div class="row">
+                <div class="col-md-8 offset-md-2 mb-5">
+                    <div class="form-group mb-2">
+                        <label for="tracking-number">Siuntos numeris</label>
+                        <input type="text" id="tracking-number" class="form-control" @bind="_trackingNumber">
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-primary" @onclick="SubmitTrackingNumber">Ieškoti</button>
+                    </div>
+                </div>
+                @if (!_shipmentEventList.IsNullOrEmpty())
+                {
+                    <div class="col-md-8 offset-md-2">
+                        <table class="table custom-table">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th>Įvykis</th>
+                                <th>Data</th>
+                                <th>Vieta</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var eventData in _shipmentEventList)
+                            {
+                                <tr>
+                                    <td>@GetStatusInLithuanian(@eventData.ShipmentStatus)</td>
+                                    <td>@eventData.EventDate</td>
+                                    <td>@eventData.Mailbox?.Location</td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                        @if (_updateShipmentStatus is not null)
+                        {
+                            <EditForm Model="@_updateShipmentStatus" OnValidSubmit="UpdateShipmentStatus">
+                                <h3 class="mt-4">Redaguoti statusą</h3>
+                                <DataAnnotationsValidator/>
+                                <ValidationSummary/>
+                                <div class="form-group">
+                                    <label for="status">Būsena</label>
+                                    <InputSelect @bind-Value="_updateShipmentStatus.ShipmentStatus" id="status" class="form-control">
+                                        @foreach (var status in (ShipmentStatus[])Enum.GetValues(typeof(ShipmentStatus)))
+                                        {
+                                            <option value="@status">@GetStatusInLithuanian(status)</option>
+                                        }
+                                    </InputSelect>
+                                </div>
+                                @if (!_mailboxList.IsNullOrEmpty())
+                                {
+                                    <div class="form-group">
+                                        <label for="mailbox">Dabartinė vieta</label>
+                                        <InputSelect @bind-Value="_updateShipmentStatus.MailboxId" id="mailbox" class="form-control">
+                                            @foreach (var mailbox in _mailboxList)
+                                            {
+                                                <option value="">-</option>
+                                                <option value="@mailbox.Id">@mailbox.Location</option>
+                                            }
+                                        </InputSelect>
+                                    </div>
+                                }
+                                <div class="d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary">Redaguoti</button>
+                                </div>
+                            </EditForm>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-10 offset-md-1">
+                        <img src="img/truck-2.png" alt="Truck image" class="w-100 mb-4">
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string _trackingNumber = "";
+    private string _errorMessage = "";
+    private UpdateShipmentStatusContract _updateShipmentStatus;
+    private IEnumerable<DetailedShipmentEventContract> _shipmentEventList;
+    private IEnumerable<MailboxContract> _mailboxList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthenticationService.OnlyCourier();
+        var absoluteUri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        if (QueryHelpers.ParseQuery(absoluteUri.Query).TryGetValue("trackingNumber", out var number))
+        {
+            _trackingNumber = number.ToString();
+            await SubmitTrackingNumber();
+        }
+        _mailboxList = await MailboxHttpClient.GetMailboxes();
+    }
+
+    private async Task SubmitTrackingNumber()
+    {
+        _errorMessage = "";
+
+        if (string.IsNullOrEmpty(_trackingNumber))
+        {
+            _errorMessage = "Įveskite siuntos numerį";
+            return;
+        }
+
+        await FetchShipmentInformation();
+    }
+
+    private async Task FetchShipmentInformation() 
+    {
+        try
+        {
+            _shipmentEventList = await ShipmentEventHttpClient.GetEventsByTrackingId(_trackingNumber);
+            if (_shipmentEventList.IsNullOrEmpty())
+            {
+                _errorMessage = "Nepavyko rasti siuntos";
+                return;
+            }
+            _updateShipmentStatus = new UpdateShipmentStatusContract
+            {
+                ShipmentId = _shipmentEventList.First().ShipmentId
+            };
+        }
+        catch (ServerRequestException exception)
+        {
+            _errorMessage = exception.ServerExceptionName switch 
+            {
+                nameof(NoShipmentEventsFoundException) => "Nepavyko rasti siuntos",
+                _ => exception.ServerExceptionMessage
+                };
+        }
+    }
+
+    private async Task UpdateShipmentStatus()
+    {
+        try
+        {
+            await ShipmentEventHttpClient.UpdateShipmentStatus(_updateShipmentStatus);
+            // await FetchShipmentInformation();
+        }
+        catch (Exception)
+        {
+            _errorMessage = "Įvyko klaida redaguojant būseną";
+        }
+    }
+
+    private string GetStatusInLithuanian(ShipmentStatus status)
+    {
+        return status switch 
+        {
+            ShipmentStatus.Submitted => "Pateikta",
+            ShipmentStatus.Received => "Gauta",
+            ShipmentStatus.Delivering => "Pristatoma",
+            ShipmentStatus.Delivered => "Pristatyta",
+            _ => "-"
+        };
+    }
+
+}

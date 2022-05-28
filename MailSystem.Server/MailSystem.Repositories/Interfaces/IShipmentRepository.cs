@@ -10,6 +10,7 @@ namespace MailSystem.Repositories.Interfaces
         Task<List<DetailedShipment>> GetUserShipments(Guid userId);
 
         Task<Guid> Create(Shipment shipment);
+
         Task<Shipment> Get(Guid shipmentId);
     }
 }

@@ -6,7 +6,7 @@
 
     <ItemGroup>
       <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
-      <PackageReference Include="MailSystem.Contracts" Version="1.0.5" />
+      <PackageReference Include="MailSystem.Contracts" Version="1.0.6" />
       <PackageReference Include="MailSystem.Exceptions" Version="1.0.0" />
       <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
     </ItemGroup>

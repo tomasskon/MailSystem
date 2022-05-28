@@ -7,8 +7,6 @@ namespace MailSystem.Http.Interfaces
 {
     public interface IUserHttpClient
     {
-        Task<IEnumerable<UserContract>> GetUsers();
-
         Task<UserContract> GetUser(Guid userId);
 
         Task UpdateUser(UserContract user);

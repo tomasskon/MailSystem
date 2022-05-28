@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Blazored.LocalStorage;
+using MailSystem.Contracts.Couriers;
 using MailSystem.Contracts.Enums;
 using MailSystem.Contracts.JWT;
 using MailSystem.Contracts.Users;
@@ -16,14 +17,16 @@ namespace MailSystem.Services.Services
 
         private readonly ILocalStorageService _localStorageService;
         private readonly IUserHttpClient _userHttpClient;
+        private readonly ICourierHttpClient _courierHttpClient;
 
         public StorageService(
             ILocalStorageService localStorageService,
-            IUserHttpClient userHttpClient
-        )
+            IUserHttpClient userHttpClient, 
+            ICourierHttpClient courierHttpClient)
         {
             _localStorageService = localStorageService;
             _userHttpClient = userHttpClient;
+            _courierHttpClient = courierHttpClient;
         }
 
         public async Task<string> GetJwtToken()
@@ -56,13 +59,26 @@ namespace MailSystem.Services.Services
             return await _localStorageService.GetItemAsync<UserContract>(UserInfoField);
         }
 
+        public async Task<CourierContract> GetCourierInfo()
+        {
+            return await _localStorageService.GetItemAsync<CourierContract>(UserInfoField);
+        }
+
         public async Task UpdateUserInfo()
         {
             var userId = await GetUserId();
+            var userType = await GetUserType();
+
             if (userId.HasValue)
             {
-                var user = await _userHttpClient.GetUser(userId.Value);
-                await _localStorageService.SetItemAsync(UserInfoField, user);
+                if (userType is UserType.User)
+                {
+                    await _localStorageService.SetItemAsync(UserInfoField, await _userHttpClient.GetUser(userId.Value));
+                }
+                else
+                {
+                    await _localStorageService.SetItemAsync(UserInfoField, await _courierHttpClient.GetCourier(userId.Value));
+                }
             }
         }
 

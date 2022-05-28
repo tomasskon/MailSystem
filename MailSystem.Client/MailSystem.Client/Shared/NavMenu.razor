@@ -1,4 +1,8 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
+﻿@using MailSystem.Contracts.Enums
+@inject IStorageService StorageService;
+@inject IAuthenticationService AuthenticationService;
+
+<div class="top-row pl-4 navbar navbar-dark">
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -6,37 +10,68 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <ul class="nav flex-column">
+        @if (_userType is UserType.User)
+        {
+            <li class="nav-item">
+                <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                    <i class="bi bi-house-door-fill"></i> Pagrindinis
+                </NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink class="nav-link" href="/my-shipments" Match="NavLinkMatch.All">
+                    <i class="bi bi-boxes"></i> Mano siuntos
+                </NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink class="nav-link" href="/create-shipment" Match="NavLinkMatch.All">
+                    <i class="bi bi-box-seam"></i> Siųsti siuntą
+                </NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink class="nav-link" href="/track-shipment" Match="NavLinkMatch.All">
+                    <i class="bi bi-info-square-fill"></i> Sekti siuntą
+                </NavLink>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item">
+                <NavLink class="nav-link" href="/courier" Match="NavLinkMatch.All">
+                    <i class="bi bi-house-door-fill"></i> Pagrindinis
+                </NavLink>
+            </li>
+            <li class="nav-item">
+                <NavLink class="nav-link" href="/courier/shipments" Match="NavLinkMatch.All">
+                    <i class="bi bi-boxes"></i> Ieškoti siuntos
+                </NavLink>
+            </li>
+        }
         <li class="nav-item">
-            <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
-                <i class="bi bi-house-door-fill"></i> Pagrindinis
-            </NavLink>
-        </li>
-        <li class="nav-item">
-            <NavLink class="nav-link" href="/my-shipments" Match="NavLinkMatch.All">
-                <i class="bi bi-boxes"></i> Mano siuntos
-            </NavLink>
-        </li>
-        <li class="nav-item">
-            <NavLink class="nav-link" href="/create-shipment" Match="NavLinkMatch.All">
-                <i class="bi bi-box-seam"></i> Siųsti siuntą
-            </NavLink>
-        </li>
-        <li class="nav-item">
-            <NavLink class="nav-link" href="/track-shipment" Match="NavLinkMatch.All">
-                <i class="bi bi-info-square-fill"></i> Sekti siuntą
-            </NavLink>
+            <a class="nav-link" href="#" @onclick="Logout">
+                <i class="bi bi-box-arrow-right"></i> Atsijungti
+            </a>
         </li>
     </ul>
 </div>
 
 @code {
-    private bool collapseNavMenu = true;
+    private UserType? _userType;
+    private bool _collapseNavMenu = true;
 
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private string NavMenuCssClass => _collapseNavMenu ? "collapse" : null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _userType = await StorageService.GetUserType();
+    }
 
     private void ToggleNavMenu()
     {
-        collapseNavMenu = !collapseNavMenu;
+        _collapseNavMenu = !_collapseNavMenu;
     }
 
+    private async Task Logout()
+    {
+        await AuthenticationService.Logout();
+    }
 }
