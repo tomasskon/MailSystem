@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using MailSystem.Contracts.Shipment;
@@ -30,6 +31,14 @@ namespace MailSystem.Http.HttpClients
             var response = await client.PostAsJsonAsync("Shipments/RegisterShipment", registerShipmentContract);
 
             return await _authorizedHttpClient.HandleStringResponse(response);
+        }
+
+        public async Task<Stream> GetPdf(Guid shipmentId)
+        {
+            using var client = await _authorizedHttpClient.CreateHttpClient();
+            var response = await client.GetAsync("Shipments/GetPdf?shipmentId=" + shipmentId);
+
+            return await _authorizedHttpClient.HandleStreamResponse(response);
         }
     }
 }

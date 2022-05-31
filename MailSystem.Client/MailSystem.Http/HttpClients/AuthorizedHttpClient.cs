@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -45,6 +46,13 @@ namespace MailSystem.Http.HttpClients
         {
             if (response.IsSuccessStatusCode)
                 return await response.Content.ReadAsStringAsync();
+
+            throw await HandleError(response);
+        }
+        public async Task<Stream> HandleStreamResponse(HttpResponseMessage response)
+        {
+            if (response.IsSuccessStatusCode)
+                return await response.Content.ReadAsStreamAsync();
 
             throw await HandleError(response);
         }

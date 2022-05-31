@@ -3,6 +3,7 @@
 # Rider
 **/.idea
 
+**/Logs
 *.suo
 *.user
 .vs/
